@@ -68,6 +68,8 @@ void broadcast::bc()
 {
     optval = 1;
 
+    cout << "端口号为：" << port << '\n';
+
     // 创建套接字
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     if (sockfd < 0)
