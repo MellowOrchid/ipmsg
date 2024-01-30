@@ -1,8 +1,9 @@
 #include <iostream>
 #include <cstring>
+#include <thread>
 #include "keyboard.cpp"
 #include "broadcast.cpp"
-using std::cin, std::cout, std::string;
+using std::cin, std::cout, std::string, std::thread;
 
 int main()
 {
@@ -11,7 +12,9 @@ int main()
 
     broadcast.bc();
     kb.help_cmd();
-    kb.kb_scan();
+    thread kb_thrd(&keyboard::kb_scan, &kb);
+
+    kb_thrd.join();
     // system("pause");
     return 0;
 }

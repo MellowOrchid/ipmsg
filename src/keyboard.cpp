@@ -17,7 +17,7 @@ private:
 public:
     keyboard();
     ~keyboard();
-    void kb_scan();
+    void *kb_scan();
     void help_cmd();
     void users_cmd();
     void exit_cmd();
@@ -28,7 +28,7 @@ keyboard::keyboard() {}
 keyboard::~keyboard() {}
 
 /** 键盘输入 */
-void keyboard::kb_scan()
+void *keyboard::kb_scan()
 {
     std::string ucmd;
     int recvBytes;
@@ -50,7 +50,7 @@ void keyboard::kb_scan()
     }
     // pthread_exit(NULL);
 
-    // return 0;
+    return 0;
 }
 
 /** 帮助 */
