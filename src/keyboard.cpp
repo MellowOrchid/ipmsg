@@ -1,27 +1,10 @@
 #include <iostream>
 #include <cstring>
 #include <vector>
-// #include <arpa/inet.h>
-// #include <iomanip>
-// #include <ctime>
-// #include "IPMSG.H"
-// #include "userlist.h"
-// #include "pack_unpack.h"
-// #include "filelist.h"
-// #include "public.h"
-using std::cin, std::cout, std::string, std::vector;
-
-class keyboard
-{
-private:
-public:
-    keyboard();
-    ~keyboard();
-    void *kb_scan();
-    void help_cmd();
-    void users_cmd();
-    void exit_cmd();
-};
+#include "user.h"
+#include "public.h"
+#include "keyboard.h"
+using std::cin, std::cout, std::string, std::vector, std::list;
 
 keyboard::keyboard() {}
 
@@ -80,7 +63,17 @@ void keyboard::help_cmd()
 /** 显示用户 */
 void keyboard::users_cmd()
 {
-    cout << "展示用户\n";
+    cout << "展示用户：\n";
+    if (ulist.empty())
+    {
+        cout << "列表为空。\n";
+        return;
+    }
+
+    for (auto &&i : ulist)
+    {
+        cout << "姓名：" << i.name << "\tIP：" << i.sin_addr.s_addr << '\n';
+    }
 }
 
 /** 退出 */

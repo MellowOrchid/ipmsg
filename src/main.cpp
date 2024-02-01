@@ -2,9 +2,9 @@
 #include <cstring>
 #include <thread>
 #include "public.h"
-#include "keyboard.cpp"
-#include "broadcast.cpp"
-#include "udp_progress.cpp"
+#include "keyboard.h"
+#include "broadcast.h"
+#include "udp_progress.h"
 using std::cin, std::cout, std::string, std::thread;
 
 int main()

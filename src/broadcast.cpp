@@ -4,25 +4,9 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <cstring>
-#define IPMSG_BR_ENTRY 0x00000001UL
+#include "broadcast.h"
+#include "IPMSG.H"
 using std::cin, std::cout, std::string, std::cerr;
-
-class broadcast
-{
-private:
-    int sockfd, port, optval;
-    struct sockaddr_in servaddr;
-    string ip;
-    char name[10];
-    char buffer[1024];
-
-public:
-    broadcast();
-    ~broadcast();
-    void send(const string &message);
-    void coding(char *buffer, unsigned int cmd, char *append);
-    void bc();
-};
 
 broadcast::broadcast()
 {
@@ -40,7 +24,10 @@ broadcast::~broadcast()
     close(sockfd);
 }
 
-/** 发送广播信息 */
+/** 
+ * 发送广播信息
+ * @param massage 要广播的信息
+ */
 void broadcast::send(const string &message)
 {
     int result = sendto(sockfd, message.c_str(), message.size(), 0,
