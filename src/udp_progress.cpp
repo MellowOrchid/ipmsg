@@ -139,10 +139,10 @@ void *udp_progress::udp_msg_process()
                                   (sockaddr *)&udp_sock_addr, &addrLen)) != -1)
         {
             recvbuf[recvbytes] = '\0';
-            cout << "接收到 UDP 数据包：" << recvbuf;
+            cout << "接收到 UDP 数据包：" << recvbuf << '\n';
 
             memset(&cmd_obj, 0, sizeof(cmd_obj));
-            transcode(&cmd_obj, recvbuf, recvbytes);
+            transcode(cmd_obj, recvbuf, recvbytes);
             cout << "解析完命令开始执行\n";
             udp_msg_handle(&cmd_obj, &udp_sock_addr);
             cout << "执行完成\n";

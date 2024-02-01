@@ -11,7 +11,7 @@ struct cmd
 };
 
 // 译码，将接收到的字符串分解为 cmd 结构体
-void transcode(cmd *obj, char *buf, int len);
+void transcode(cmd &obj, char buf[], int len);
 // 编码，将要发送的信息编码为字符串保存到buf中
 int coding(char *buf, unsigned int cmd, char *append);
 

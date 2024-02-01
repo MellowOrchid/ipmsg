@@ -8,9 +8,11 @@
 char myname[20];
 
 // 将接收到的字符串分解为 cmd 结构体
-void transcode(struct cmd *object, char *buffer, int len)
+void transcode(cmd &object, char buffer[], int len)
 {
-    sscanf(buffer, "1:%[^:]:%[^:]:%[^:]:%d:%[^\n]", object->id, object->name, object->hostname, &object->cmdid, object->buf);
+    char version[50];
+    sscanf(buffer, "%[^:]:%[^:]:%[^:]:%[^:]:%d:%[^\n]",
+           version, object.id, object.name, object.hostname, &object.cmdid, object.buf);
 }
 
 // 要发送的信息编码为字符串保存到buf中
