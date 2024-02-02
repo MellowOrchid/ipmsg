@@ -24,6 +24,8 @@ bool userlist::hasUser(in_addr &sin_addr)
 
 int userlist::addUser(in_addr &sin_addr, string name, string hostname)
 {
+    user u(sin_addr, name, hostname);
+    ulist.push_back(u);
     return 0;
 }
 
