@@ -11,6 +11,7 @@ using std::list;
 #define BUFFER_SIZE 1024
 
 extern char myname[20];
+extern char hname[20];
 
 extern int udp_sock;
 extern int tcp_sock;

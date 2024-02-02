@@ -8,7 +8,7 @@
 using std::cin, std::cout, std::string, std::thread;
 
 int udp_sock;
-char myname[20];
+char myname[20], hname[20];
 list<user> ulist;
 
 int main()

@@ -3,12 +3,14 @@
 
 #include <string>
 #include <netinet/in.h>
+#include "userlist.h"
 using std::string;
 class broadcast
 {
 private:
     int optval;
     char buffer[1024];
+    userlist ulist_impl;
     string ip;
     sockaddr_in servaddr;
 

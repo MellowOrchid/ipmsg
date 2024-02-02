@@ -148,7 +148,7 @@ void *udp_progress::udp_msg_process()
             cout << "执行完成\n";
         }
         else
-            cout << "UDP接收失败\n";
+            cout << "UDP 接收失败\n";
     }
     return 0;
 }

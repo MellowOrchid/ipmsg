@@ -38,7 +38,6 @@ void broadcast::send(const string &message)
 /** 合并信息 */
 void broadcast::coding(char *buffer, unsigned int cmd, char *append)
 {
-    char hname[20];
     time_t h;
 
     time(&h);
@@ -82,4 +81,11 @@ void broadcast::bc()
 
     coding(buffer, IPMSG_BR_ENTRY, myname);
     send(buffer);
+
+    user u(servaddr.sin_addr, myname, hname);
+    if (!ulist_impl.hasUser(servaddr.sin_addr))
+    {
+        ulist.push_front(u);
+    }
+    
 }

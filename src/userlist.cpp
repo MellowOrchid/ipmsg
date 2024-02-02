@@ -5,7 +5,7 @@
 
 userlist::userlist()
 {
-    // ulist.clear();
+    ulist.clear();
 }
 
 userlist::~userlist() {}
