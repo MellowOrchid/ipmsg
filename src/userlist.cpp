@@ -1,10 +1,11 @@
 #include <string>
 #include <netinet/in.h>
 #include "userlist.h"
+#include "user.h"
 
 userlist::userlist()
 {
-    ulist.clear();
+    // ulist.clear();
 }
 
 userlist::~userlist() {}
@@ -23,5 +24,23 @@ bool userlist::hasUser(in_addr &sin_addr)
 
 int userlist::addUser(in_addr &sin_addr, string name, string hostname)
 {
+    return 0;
+}
+
+int userlist::delUser(in_addr sin_addr)
+{
+    if (ulist.empty())
+    {
+        return 0;
+    }
+
+    for (auto &&i : ulist)
+    {
+        if (i.sin_addr.s_addr == sin_addr.s_addr)
+        {
+            ulist.remove(i);
+        }
+    }
+
     return 0;
 }

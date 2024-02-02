@@ -4,8 +4,6 @@
 #include "user.h"
 using std::string, std::list;
 
-list<user> ulist;
-
 user::user() {}
 
 user::user(in_addr &sin_addr, string name, string hostname)
