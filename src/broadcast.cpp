@@ -15,7 +15,7 @@ broadcast::broadcast()
     cin >> ip;
 
     cout << "用户名：";
-    cin >> name;
+    cin >> myname;
 }
 
 broadcast::~broadcast()
@@ -29,6 +29,7 @@ broadcast::~broadcast()
  */
 void broadcast::send(const string &message)
 {
+    cout << "信息长度：" << message.length() << '\n';
     int result = sendto(udp_sock, message.c_str(), message.size(), 0,
                         (sockaddr *)&servaddr, sizeof(servaddr));
     cout << "套接字发送结果：" << result << '\n';
@@ -45,7 +46,7 @@ void broadcast::coding(char *buffer, unsigned int cmd, char *append)
     if (append == NULL)
         *append = '0';
 
-    sprintf(buffer, "1:%ld:%s:%s:%d:%s", h, append, hname, cmd, append);
+    sprintf(buffer, "1:%ld:%s:%s:%d:%s", h, myname, hname, cmd, append);
     cout << "合并后信息：" << buffer << '\n';
 }
 
@@ -64,13 +65,21 @@ void broadcast::bc()
         exit(1);
     }
 
+    char lip[20];
+    for (int i = 0; i < ip.length(); i++)
+    {
+        lip[i] = ip[i];
+    }
+    lip[ip.length()] = 0;
+
     setsockopt(udp_sock, SOL_SOCKET, SO_BROADCAST, &optval, sizeof(optval));
 
     memset(&servaddr, 0, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(MSG_PORT);
-    servaddr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
+    // servaddr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
+    inet_pton(AF_INET, lip, &servaddr.sin_addr);
 
-    coding(buffer, IPMSG_BR_ENTRY, name);
+    coding(buffer, IPMSG_BR_ENTRY, myname);
     send(buffer);
 }
