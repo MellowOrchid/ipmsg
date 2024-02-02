@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <arpa/inet.h>
 #include <vector>
 #include "user.h"
 #include "public.h"
@@ -72,7 +73,7 @@ void keyboard::users_cmd()
 
     for (auto &&i : ulist)
     {
-        cout << "姓名：" << i.name << "\tIP：" << i.sin_addr.s_addr << '\n';
+        cout << "姓名：" << i.name << "\tIP：" << inet_ntoa(i.sin_addr) << '\n';
     }
 }
 
