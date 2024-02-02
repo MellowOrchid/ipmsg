@@ -7,6 +7,7 @@
 #include "userlist.h"
 #include "public.h"
 #include "IPMSG.H"
+#include <arpa/inet.h>
 using std::cerr, std::cout;
 
 udp_progress::udp_progress() {}
@@ -53,20 +54,20 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
             ulist_impl.delUser(send_addr->sin_addr);
         }
     }
-    // // 接收到消息
-    // if (GET_MODE(msg->cmdid) == IPMSG_SENDMSG)
-    // {
-    //     char codingbuff[BUFF_SIZE];
-    //     if ((msg->cmdid & IPMSG_SENDCHECKOPT) == IPMSG_SENDCHECKOPT)
-    //     {
-    //         coding(codingbuff, IPMSG_RECVMSG, msg->id);
-    //         sendto(udp_sock, codingbuff, strlen(codingbuff), 0,
-    //                (struct sockaddr *)&udp_sock_addr, sizeof(udp_sock_addr));
-    //     }
-    //     printf("[recv msg from: %s :%s]#", msg->name, inet_ntoa(send_addr->sin_addr));
-    //     printf("%s\n", msg->buf);
-    // }
-    // // 接收到文件
+    // 接收到消息
+    if (GET_MODE(msg->cmdid) == IPMSG_SENDMSG)
+    {
+        char codingbuff[BUFF_SIZE];
+        if ((msg->cmdid & IPMSG_SENDCHECKOPT) == IPMSG_SENDCHECKOPT)
+        {
+            coding(codingbuff, IPMSG_RECVMSG, msg->id);
+            sendto(udp_sock, codingbuff, strlen(codingbuff), 0,
+                   (struct sockaddr *)&udp_sock_addr, sizeof(udp_sock_addr));
+        }
+        cout << "接收到【" << msg->name << "】位于[" << inet_ntoa(send_addr->sin_addr) << "]的消息：\n";
+        cout << msg->buf << '\n';
+    }
+    // 接收到文件
     // if ((msg->cmdid & IPMSG_FILEATTACHOPT) == IPMSG_FILEATTACHOPT)
     // {
     //     char codingbuff[BUFF_SIZE];
