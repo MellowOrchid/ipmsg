@@ -7,11 +7,11 @@ using std::string;
 class broadcast
 {
 private:
-    int sockfd, port, optval;
-    struct sockaddr_in servaddr;
-    string ip;
+    int optval;
     char name[10];
     char buffer[1024];
+    string ip;
+    sockaddr_in servaddr;
 
 public:
     broadcast();

@@ -6,12 +6,11 @@
 #include <cstring>
 #include "broadcast.h"
 #include "IPMSG.H"
+#include "public.h"
 using std::cin, std::cout, std::string, std::cerr;
 
 broadcast::broadcast()
 {
-    port = 2425;
-
     cout << "本机 IP：";
     cin >> ip;
 
@@ -21,17 +20,17 @@ broadcast::broadcast()
 
 broadcast::~broadcast()
 {
-    close(sockfd);
+    close(udp_sock);
 }
 
-/** 
+/**
  * 发送广播信息
  * @param massage 要广播的信息
  */
 void broadcast::send(const string &message)
 {
-    int result = sendto(sockfd, message.c_str(), message.size(), 0,
-                        (struct sockaddr *)&servaddr, sizeof(servaddr));
+    int result = sendto(udp_sock, message.c_str(), message.size(), 0,
+                        (sockaddr *)&servaddr, sizeof(servaddr));
     cout << "套接字发送结果：" << result << '\n';
 }
 
@@ -55,22 +54,22 @@ void broadcast::bc()
 {
     optval = 1;
 
-    cout << "端口号为：" << port << '\n';
+    cout << "端口号为：" << MSG_PORT << '\n';
 
     // 创建套接字
-    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
-    if (sockfd < 0)
+    udp_sock = socket(AF_INET, SOCK_DGRAM, 0);
+    if (udp_sock < 0)
     {
         cerr << "未能创建套接字\n";
         exit(1);
     }
 
-    setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, &optval, sizeof(optval));
+    setsockopt(udp_sock, SOL_SOCKET, SO_BROADCAST, &optval, sizeof(optval));
 
     memset(&servaddr, 0, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(port);
-    servaddr.sin_addr.s_addr = inet_addr(ip.c_str());
+    servaddr.sin_port = htons(MSG_PORT);
+    servaddr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
 
     coding(buffer, IPMSG_BR_ENTRY, name);
     send(buffer);

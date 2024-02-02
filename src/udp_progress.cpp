@@ -6,6 +6,7 @@
 #include "userlist.h"
 #include "public.h"
 #include "IPMSG.H"
+#include <unistd.h>
 using std::cerr, std::cout;
 
 udp_progress::udp_progress() {}
@@ -33,27 +34,25 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
             printf("sendto fail\n");
         }
     }
-    // // 接收到应答上线信息
-    // if (GET_MODE(msg->cmdid) == IPMSG_ANSENTRY)
-    // {
-    //     // 没有此用户则添加此用户
-    //     // 根据sin_addr 判断
-    //     if (getUser(&send_addr->sin_addr) == NULL)
-    //     {
-    //         addUser(&send_addr->sin_addr, msg->buf, msg->hostname);
-    //     }
-    // }
-    // // 接收到用户下线信息
-    // if (GET_MODE(msg->cmdid) == IPMSG_BR_EXIT)
-    // {
-    //     // 有此用户则删除此用户
-    //     struct user *logout_user;
-    //     if ((logout_user = getUser(&send_addr->sin_addr)) != NULL)
-    //     {
-    //         // 根据sin_addr 删除用户
-    //         delUser(send_addr->sin_addr);
-    //     }
-    // }
+    // 接收到应答上线信息
+    if (GET_MODE(msg->cmdid) == IPMSG_ANSENTRY)
+    {
+        /// 根据 sin_addr 判断该用户是否存在
+        if (!ulist_impl.hasUser(send_addr->sin_addr))
+        {
+            ulist_impl.addUser(send_addr->sin_addr, msg->name, msg->hostname);
+        }
+    }
+    // 接收到用户下线信息
+    if (GET_MODE(msg->cmdid) == IPMSG_BR_EXIT)
+    {
+        // 有此用户则删除此用户
+        // 根据 sin_addr 判断该用户是否存在
+        if (!ulist_impl.hasUser(send_addr->sin_addr))
+        {
+            ulist_impl.delUser(send_addr->sin_addr);
+        }
+    }
     // // 接收到消息
     // if (GET_MODE(msg->cmdid) == IPMSG_SENDMSG)
     // {
@@ -101,11 +100,11 @@ void *udp_progress::udp_msg_process()
 {
     unsigned addrLen = sizeof(udp_sock_addr);
     int recvbytes;
-    const int PORT = 2425;
-    struct sockaddr_in serverAddr, clientAddr;
+    struct sockaddr_in serverAddr;
 
     memset(&udp_sock_addr, 0, sizeof(udp_sock_addr));
 
+    close(udp_sock);
     udp_sock = socket(AF_INET, SOCK_DGRAM, 0);
     cout << "UDP 套接字信息：" << udp_sock << '\n';
     if (udp_sock < 0)
@@ -123,13 +122,14 @@ void *udp_progress::udp_msg_process()
     // 设置服务器地址结构
     memset(&serverAddr, 0, sizeof(serverAddr));
     serverAddr.sin_family = AF_INET;
+    serverAddr.sin_port = htons(MSG_PORT);
     serverAddr.sin_addr.s_addr = INADDR_ANY;
-    serverAddr.sin_port = htons(PORT);
 
     // 绑定套接字到端口
-    if (bind(udp_sock, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
+    if (bind(udp_sock, (sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
     {
-        cerr << "未能绑定套接字\n";
+        perror("bind");
+        cerr << "未能绑定套接字：" << strerror(errno) << '\n'; // 打印具体的错误信息
         return 0;
     }
     while (1)

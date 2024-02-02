@@ -13,7 +13,6 @@ using std::cerr, std::cout;
 class udp_progress
 {
 private:
-    int udp_sock;
     char recvbuf[BUFF_SIZE];
     cmd cmd_obj;
     userlist ulist_impl;

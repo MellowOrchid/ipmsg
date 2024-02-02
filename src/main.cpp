@@ -7,7 +7,9 @@
 #include "udp_progress.h"
 using std::cin, std::cout, std::string, std::thread;
 
+int udp_sock;
 list<user> ulist;
+
 int main()
 {
     keyboard kb;
