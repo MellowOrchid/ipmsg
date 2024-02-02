@@ -8,7 +8,6 @@ class broadcast
 {
 private:
     int optval;
-    char name[10];
     char buffer[1024];
     string ip;
     sockaddr_in servaddr;

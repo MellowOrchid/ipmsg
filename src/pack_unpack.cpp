@@ -5,8 +5,6 @@
 #include "public.h"
 #include "pack_unpack.h"
 
-char myname[20];
-
 // 将接收到的字符串分解为 cmd 结构体
 void transcode(cmd &object, char buffer[], int len)
 {

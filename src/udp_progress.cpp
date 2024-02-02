@@ -1,12 +1,12 @@
 #include <iostream>
 #include <netinet/in.h>
 #include <cstring>
+#include <unistd.h>
 #include "udp_progress.h"
 #include "pack_unpack.h"
 #include "userlist.h"
 #include "public.h"
 #include "IPMSG.H"
-#include <unistd.h>
 using std::cerr, std::cout;
 
 udp_progress::udp_progress() {}
