@@ -1,14 +1,15 @@
 #include <iostream>
-#include <netinet/in.h>
 #include <cstring>
 #include <unistd.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include "udp_progress.h"
 #include "pack_unpack.h"
 #include "userlist.h"
 #include "public.h"
 #include "IPMSG.H"
-#include <arpa/inet.h>
 #include "write_log.h"
+#include "keyboard.h"
 using std::cerr, std::cout;
 
 udp_progress::udp_progress() {}
@@ -66,8 +67,10 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
             sendto(udp_sock, codingbuff, strlen(codingbuff), 0,
                    (struct sockaddr *)&udp_sock_addr, sizeof(udp_sock_addr));
         }
-        cout << "接收到【" << msg->name << "】位于[" << inet_ntoa(send_addr->sin_addr) << "]的消息：\n";
-        cout << msg->buf << '\n';
+        cout << "\n接收到【" << msg->name << "】位于["
+             << inet_ntoa(send_addr->sin_addr) << "]的消息：\n"
+             << msg->buf << "\n\n"
+             << "请继续写：";
     }
     // 接收到文件
     // if ((msg->cmdid & IPMSG_FILEATTACHOPT) == IPMSG_FILEATTACHOPT)

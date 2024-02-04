@@ -15,7 +15,7 @@ list<user> ulist;
 
 int main()
 {
-    lmsg = "=====程序开始=====";
+    lmsg = "===== 程序开始 =====";
     wlog::log(lmsg);
 
     keyboard kb;
@@ -30,7 +30,7 @@ int main()
     udp_thrd.join();
     kb_thrd.join();
 
-    lmsg = "=====程序结束=====";
+    lmsg = "===== 程序结束 =====";
     wlog::log(lmsg);
 
     // system("pause");

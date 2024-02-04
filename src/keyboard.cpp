@@ -62,15 +62,16 @@ void keyboard::help_cmd()
     cmds.push_back("\t\tgetfile [文件名]");
     cmds.push_back("\t\texit");
 
-    cout << "使用指南：\n";
+    cout << "\n使用指南：\n";
     for (int i = 0; i < names.size(); i++)
         cout << names.at(i) << "：" << cmds.at(i) << '\n';
+    cout << '\n';
 }
 
 /** 显示用户 */
 void keyboard::users_cmd()
 {
-    cout << "展示用户：\n";
+    cout << "\n展示用户：\n";
     if (ulist.empty())
     {
         cout << "列表为空。\n";
@@ -78,9 +79,9 @@ void keyboard::users_cmd()
     }
 
     for (auto &&i : ulist)
-    {
         cout << "姓名：" << i.name << "\tIP：" << inet_ntoa(i.sin_addr) << '\n';
-    }
+
+    cout << '\n';
 }
 
 /** 退出 */
@@ -104,14 +105,14 @@ void keyboard::sendto_cmd(string cmd)
         return;
     }
 
-    cout << "输入 `exit` 可退出交流\n";
+    cout << "\n输入 `exit` 可退出交流\n";
     while (1)
     {
         cout << "发送给【" << dest << "】：";
         cin.getline(message, BUFFER_SIZE);
         if (!strcmp(message, "exit"))
         {
-            cout << "与【" << dest << "】的交流结束\n";
+            cout << "与【" << dest << "】的交流结束\n\n";
             break;
         }
         coding(codingbuff, IPMSG_SENDMSG, message);
@@ -123,7 +124,7 @@ void keyboard::sendto_cmd(string cmd)
             wlog::log(lmsg);
             wlog::log(strerror(errno));
             cerr << lmsg << strerror(errno) << '\n'
-                 << "与【" << dest << "】的交流结束\n";
+                 << "与【" << dest << "】的交流结束\n\n";
             break;
         }
     }
