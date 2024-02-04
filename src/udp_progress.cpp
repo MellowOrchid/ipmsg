@@ -28,11 +28,11 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
         memset(buff, 0, sizeof(buff));
         // 发送 IPMSG_ANSENTRY 信息
         coding(buff, IPMSG_ANSENTRY, myname);
-        int sendBytes;
-        if ((sendBytes = sendto(udp_sock, buff, strlen(buff), 0,
-                                (struct sockaddr *)send_addr, sizeof(struct sockaddr))) == -1)
+        int sendBytes = sendto(udp_sock, buff, strlen(buff), 0,
+                               (struct sockaddr *)send_addr, sizeof(struct sockaddr));
+        if (sendBytes == -1)
         {
-            printf("sendto fail\n");
+            cerr << "发送 IPMSG_ANSENTRY 失败\n";
         }
     }
     // 接收到应答上线信息
