@@ -41,6 +41,7 @@ int userlist::delUser(in_addr sin_addr)
         if (i.sin_addr.s_addr == sin_addr.s_addr)
         {
             ulist.remove(i);
+            break;
         }
     }
 

@@ -47,9 +47,8 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
     // 接收到用户下线信息
     if (GET_MODE(msg->cmdid) == IPMSG_BR_EXIT)
     {
-        // 有此用户则删除此用户
         // 根据 sin_addr 判断该用户是否存在
-        if (!ulist_impl.hasUser(send_addr->sin_addr))
+        if (ulist_impl.hasUser(send_addr->sin_addr))
         {
             ulist_impl.delUser(send_addr->sin_addr);
         }
@@ -129,7 +128,7 @@ void *udp_progress::udp_msg_process()
     // 绑定套接字到端口
     if (bind(udp_sock, (sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
     {
-        perror("bind");
+        perror("广播错误");
         cerr << "未能绑定套接字：" << strerror(errno) << '\n'; // 打印具体的错误信息
         return 0;
     }
