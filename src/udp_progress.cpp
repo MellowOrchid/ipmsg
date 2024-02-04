@@ -8,6 +8,7 @@
 #include "public.h"
 #include "IPMSG.H"
 #include <arpa/inet.h>
+#include "write_log.h"
 using std::cerr, std::cout;
 
 udp_progress::udp_progress() {}
@@ -32,7 +33,9 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
                                (struct sockaddr *)send_addr, sizeof(struct sockaddr));
         if (sendBytes == -1)
         {
-            cerr << "发送 IPMSG_ANSENTRY 失败\n";
+            lmsg = "发送 IPMSG_ANSENTRY 失败";
+            wlog::log(lmsg);
+            cerr << lmsg << '\n';
         }
     }
     // 接收到应答上线信息
@@ -100,23 +103,31 @@ void *udp_progress::udp_msg_process()
 {
     unsigned addrLen = sizeof(udp_sock_addr);
     int recvbytes;
-    struct sockaddr_in serverAddr;
+    sockaddr_in serverAddr;
 
     memset(&udp_sock_addr, 0, sizeof(udp_sock_addr));
 
     close(udp_sock);
     udp_sock = socket(AF_INET, SOCK_DGRAM, 0);
-    cout << "UDP 套接字信息：" << udp_sock << '\n';
+
+    lmsg = "UDP 套接字信息：";
+    wlog::log(lmsg);
+    wlog::log(udp_sock);
+
     if (udp_sock < 0)
     {
-        cerr << "未能创建套接字。\n";
+        lmsg = "未能创建套接字。";
+        wlog::log(lmsg);
+        cerr << lmsg << '\n';
         return 0;
     }
     // 设置套接字选项以允许广播
     int broadcastEnable = 1;
     if (setsockopt(udp_sock, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable)) < 0)
     {
-        cerr << "未能设置套接字选项。\n";
+        lmsg = "未能设置套接字选项。";
+        wlog::log(lmsg);
+        cerr << lmsg << '\n';
         return 0;
     }
     // 设置服务器地址结构
@@ -128,10 +139,13 @@ void *udp_progress::udp_msg_process()
     // 绑定套接字到端口
     if (bind(udp_sock, (sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
     {
-        perror("广播错误");
-        cerr << "未能绑定套接字：" << strerror(errno) << '\n'; // 打印具体的错误信息
+        lmsg = "未能绑定套接字：";
+        wlog::log(lmsg);
+        wlog::log(strerror(errno));
+        cerr << lmsg << strerror(errno) << '\n'; // 打印具体的错误信息
         return 0;
     }
+
     while (1)
     {
         // 接收用户信息，接收广播信息和广播机器的 IP，不限源
@@ -139,16 +153,24 @@ void *udp_progress::udp_msg_process()
                                   (sockaddr *)&udp_sock_addr, &addrLen)) != -1)
         {
             recvbuf[recvbytes] = '\0';
-            cout << "接收到 UDP 数据包：" << recvbuf << '\n';
+            lmsg = "接收到 UDP 数据包：";
+            wlog::log(lmsg);
+            wlog::log(recvbuf);
 
             memset(&cmd_obj, 0, sizeof(cmd_obj));
             transcode(cmd_obj, recvbuf, recvbytes);
-            cout << "解析完命令开始执行\n";
+            lmsg = "解析完成，开始执行";
+            wlog::log(lmsg);
             udp_msg_handle(&cmd_obj, &udp_sock_addr);
-            cout << "执行完成\n";
+            lmsg = "执行完成";
+            wlog::log(lmsg);
         }
         else
-            cout << "UDP 接收失败\n";
+        {
+            lmsg = "UDP 接收失败";
+            wlog::log(lmsg);
+            cerr << lmsg << '\n';
+        }
     }
     return 0;
 }

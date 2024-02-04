@@ -7,18 +7,20 @@
 #include "keyboard.h"
 #include "pack_unpack.h"
 #include "IPMSG.H"
+#include "write_log.h"
 using std::cin, std::cout, std::cerr, std::string, std::vector, std::list;
 
 sockaddr_in dest_addr;
-keyboard::keyboard() {}
 
+keyboard::keyboard() {}
 keyboard::~keyboard() {}
 
 /** 键盘输入 */
 int *keyboard::kb_scan()
 {
-    std::string ucmd;
     int recvBytes;
+    string ucmd;
+    getchar(); // 读一个回车
     while (1)
     {
         cout << "ipmsg> ";
@@ -87,12 +89,18 @@ void keyboard::exit_cmd()
     cout << "程序退出……\n";
 }
 
+/** 送信 */
 void keyboard::sendto_cmd(string cmd)
 {
     dest = cmd.substr(7);
+    lmsg = "尝试交流：";
+    wlog::log(lmsg);
+    wlog::log(dest);
     if (!hasUser(dest))
     {
-        cerr << "该用户不存在。\n";
+        lmsg = "该用户不存在。";
+        wlog::log(lmsg);
+        cerr << lmsg << '\n';
         return;
     }
 
@@ -111,14 +119,17 @@ void keyboard::sendto_cmd(string cmd)
                         (sockaddr *)&dest_addr, sizeof(dest_addr));
         if (result == -1)
         {
-            // cout << "送信失败\n";
-            cerr << "送信失败：" << strerror(errno) << '\n'
+            lmsg = "送信失败：";
+            wlog::log(lmsg);
+            wlog::log(strerror(errno));
+            cerr << lmsg << strerror(errno) << '\n'
                  << "与【" << dest << "】的交流结束\n";
             break;
         }
     }
 }
 
+/** 根据用户名判断 */
 bool keyboard::hasUser(string destU)
 {
     bool exist = false;

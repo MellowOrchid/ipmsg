@@ -12,6 +12,7 @@ using std::list;
 
 extern char myname[20];
 extern char hname[20];
+extern string lmsg;
 
 extern int udp_sock;
 extern int tcp_sock;
@@ -19,6 +20,5 @@ extern sockaddr_in udp_sock_addr;
 extern sockaddr_in tcp_sock_addr;
 
 extern list<user> ulist;
-// extern list<user>::iterator uiter;
 
 #endif

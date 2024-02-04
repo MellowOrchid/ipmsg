@@ -4,6 +4,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <cstring>
+#include "write_log.h"
 #include "broadcast.h"
 #include "IPMSG.H"
 #include "public.h"
@@ -29,10 +30,16 @@ broadcast::~broadcast()
  */
 void broadcast::send(const string &message)
 {
-    cout << "信息长度：" << message.length() << '\n';
+    lmsg = "信息长度：";
+    wlog::log(lmsg);
+    wlog::log(message.length());
+
     int result = sendto(udp_sock, message.c_str(), message.size(), 0,
                         (sockaddr *)&servaddr, sizeof(servaddr));
-    cout << "套接字发送结果：" << result << '\n';
+
+    lmsg = "套接字发送结果：";
+    wlog::log(lmsg);
+    wlog::log(result);
 }
 
 /** 合并信息 */
@@ -46,7 +53,10 @@ void broadcast::coding(char *buffer, unsigned int cmd, char *append)
         *append = '0';
 
     sprintf(buffer, "1:%ld:%s:%s:%d:%s", h, myname, hname, cmd, append);
-    cout << "合并后信息：" << buffer << '\n';
+
+    lmsg = "合并后信息：";
+    wlog::log(lmsg);
+    wlog::log(buffer);
 }
 
 /** 执行广播 */
@@ -54,13 +64,18 @@ void broadcast::bc()
 {
     optval = 1;
 
-    cout << "端口号为：" << MSG_PORT << '\n';
+    lmsg = "端口号为：";
+    wlog::log(lmsg);
+    wlog::log(MSG_PORT);
+    cout << lmsg << MSG_PORT << '\n';
 
     // 创建套接字
     udp_sock = socket(AF_INET, SOCK_DGRAM, 0);
     if (udp_sock < 0)
     {
-        cerr << "未能创建套接字\n";
+        lmsg = "未能创建套接字";
+        wlog::log(lmsg);
+        cerr << lmsg << '\n';
         exit(1);
     }
 
@@ -87,5 +102,4 @@ void broadcast::bc()
     {
         ulist.push_front(u);
     }
-    
 }
