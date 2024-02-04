@@ -8,14 +8,19 @@ using std::list;
 class keyboard
 {
 private:
+    string dest;
+    char codingbuff[BUFF_SIZE], message[BUFFER_SIZE];
+    int result;
+    bool hasUser(string destU);
 
 public:
     keyboard();
     ~keyboard();
-    void *kb_scan();
+    int *kb_scan();
     void help_cmd();
     void users_cmd();
     void exit_cmd();
+    void sendto_cmd(string cmd);
 };
 
 #endif

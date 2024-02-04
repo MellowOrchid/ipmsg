@@ -5,25 +5,30 @@
 #include "user.h"
 #include "public.h"
 #include "keyboard.h"
-using std::cin, std::cout, std::string, std::vector, std::list;
+#include "pack_unpack.h"
+#include "IPMSG.H"
+using std::cin, std::cout, std::cerr, std::string, std::vector, std::list;
 
+sockaddr_in dest_addr;
 keyboard::keyboard() {}
 
 keyboard::~keyboard() {}
 
 /** 键盘输入 */
-void *keyboard::kb_scan()
+int *keyboard::kb_scan()
 {
     std::string ucmd;
     int recvBytes;
     while (1)
     {
         cout << "ipmsg> ";
-        // 读取键盘输入
-        cin >> ucmd;
+        // 读取键盘输入，应当使用整行读取
+        getline(cin, ucmd);
 
         if (ucmd == "users")
             users_cmd();
+        else if (ucmd.find("sendto") != -1)
+            sendto_cmd(ucmd);
         else if (ucmd == "exit")
         {
             exit_cmd();
@@ -32,7 +37,6 @@ void *keyboard::kb_scan()
         else
             help_cmd();
     }
-    // pthread_exit(NULL);
 
     return 0;
 }
@@ -81,4 +85,54 @@ void keyboard::users_cmd()
 void keyboard::exit_cmd()
 {
     cout << "程序退出……\n";
+}
+
+void keyboard::sendto_cmd(string cmd)
+{
+    dest = cmd.substr(7);
+    if (!hasUser(dest))
+    {
+        cerr << "该用户不存在。\n";
+        return;
+    }
+
+    cout << "输入 `exit` 可退出交流\n";
+    while (1)
+    {
+        cout << "发送给【" << dest << "】：";
+        cin.getline(message, BUFFER_SIZE);
+        if (!strcmp(message, "exit"))
+        {
+            cout << "与【" << dest << "】的交流结束\n";
+            break;
+        }
+        coding(codingbuff, IPMSG_SENDMSG, message);
+        result = sendto(udp_sock, codingbuff, strlen(codingbuff), 0,
+                        (sockaddr *)&dest_addr, sizeof(dest_addr));
+        if (result == -1)
+        {
+            // cout << "送信失败\n";
+            cerr << "送信失败：" << strerror(errno) << '\n'
+                 << "与【" << dest << "】的交流结束\n";
+            break;
+        }
+    }
+}
+
+bool keyboard::hasUser(string destU)
+{
+    bool exist = false;
+    for (auto &&i : ulist)
+    {
+        if (i.name == destU)
+        {
+            memset(&dest_addr, 0, sizeof(dest_addr));
+            dest_addr.sin_family = AF_INET;
+            dest_addr.sin_port = htons(MSG_PORT);
+            dest_addr.sin_addr = i.sin_addr;
+            exist = true;
+            break;
+        }
+    }
+    return exist;
 }
