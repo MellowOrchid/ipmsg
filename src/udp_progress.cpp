@@ -70,7 +70,7 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
         cout << "\n接收到【" << msg->name << "】位于["
              << inet_ntoa(send_addr->sin_addr) << "]的消息：\n"
              << msg->buf << "\n\n"
-             << "请继续写：";
+             << "请继续写：" << std::flush; // 刷新缓冲区，使其立即打印
     }
     // 接收到文件
     // if ((msg->cmdid & IPMSG_FILEATTACHOPT) == IPMSG_FILEATTACHOPT)
