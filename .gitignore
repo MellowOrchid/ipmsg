@@ -31,6 +31,9 @@
 *.out
 *.app
 
+#Log files
+*.log
+
 /bin/
 /cache/
 /.vscode/
