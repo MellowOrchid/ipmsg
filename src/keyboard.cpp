@@ -110,7 +110,7 @@ void keyboard::exit_cmd()
     msg[0] = '0';
     msg[1] = 0;
     // 发送 IPMSG_BR_EXIT 信息
-    coding(buff, IPMSG_BR_EXIT, msg);
+    cmd::coding(buff, IPMSG_BR_EXIT, msg);
     sendBytes = sendto(udp_sock, buff, strlen(buff), 0, (sockaddr *)&exit_send_addr, len);
     if (sendBytes == -1)
     {
@@ -146,7 +146,7 @@ void keyboard::sendto_cmd(string cmd)
             cout << "与【" << dest << "】的交流结束\n\n";
             break;
         }
-        coding(codingbuff, IPMSG_SENDMSG, message);
+        cmd::coding(codingbuff, IPMSG_SENDMSG, message);
         result = sendto(udp_sock, codingbuff, strlen(codingbuff), 0,
                         (sockaddr *)&dest_addr, sizeof(dest_addr));
         if (result == -1)

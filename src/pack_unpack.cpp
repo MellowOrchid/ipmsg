@@ -5,8 +5,11 @@
 #include "public.h"
 #include "pack_unpack.h"
 
+cmd::cmd() {}
+cmd::~cmd() {}
+
 // 将接收到的字符串分解为 cmd 结构体
-void transcode(cmd &object, char buffer[], int len)
+void cmd::transcode(cmd &object, char buffer[], int len)
 {
     char version[50];
     sscanf(buffer, "%[^:]:%[^:]:%[^:]:%[^:]:%d:%[^\003]",
@@ -14,7 +17,7 @@ void transcode(cmd &object, char buffer[], int len)
 }
 
 // 要发送的信息编码为字符串保存到buf中
-int coding(char *buffer, unsigned int cmd, char *append)
+int cmd::coding(char *buffer, unsigned int cmd, char *append)
 {
     char hname[20];
     time_t h;

@@ -30,7 +30,7 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
         char buff[BUFF_SIZE];
         memset(buff, 0, sizeof(buff));
         // 发送 IPMSG_ANSENTRY 信息
-        coding(buff, IPMSG_ANSENTRY, myname);
+        cmd::coding(buff, IPMSG_ANSENTRY, myname);
         int sendBytes = sendto(udp_sock, buff, strlen(buff), 0,
                                (struct sockaddr *)send_addr, sizeof(struct sockaddr));
         if (sendBytes == -1)
@@ -67,7 +67,7 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
         char codingbuff[BUFF_SIZE];
         if ((msg->cmdid & IPMSG_SENDCHECKOPT) == IPMSG_SENDCHECKOPT)
         {
-            coding(codingbuff, IPMSG_RECVMSG, msg->id);
+            cmd::coding(codingbuff, IPMSG_RECVMSG, msg->id);
             sendto(udp_sock, codingbuff, strlen(codingbuff), 0,
                    (struct sockaddr *)&udp_sock_addr, sizeof(udp_sock_addr));
         }
@@ -82,7 +82,7 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
     {
         char codingbuff[BUFF_SIZE];
         char *csend, *pp;
-        coding(codingbuff, IPMSG_RECVMSG, msg->id);
+        cmd::coding(codingbuff, IPMSG_RECVMSG, msg->id);
         sendto(udp_sock, codingbuff, strlen(codingbuff), 0,
                (sockaddr *)&udp_sock_addr, sizeof(sockaddr_in));
         rcvfile rcvd_file;
@@ -169,7 +169,7 @@ int udp_progress::udp_msg_process()
             wlog::log(recvbuf);
 
             memset(&cmd_obj, 0, sizeof(cmd_obj));
-            transcode(cmd_obj, recvbuf, recvbytes);
+            cmd::transcode(cmd_obj, recvbuf, recvbytes);
             lmsg = "解析完成，开始执行";
             wlog::log(lmsg);
             udp_msg_handle(&cmd_obj, &udp_sock_addr);
