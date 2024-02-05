@@ -22,7 +22,7 @@ public:
     udp_progress();
     ~udp_progress();
     void udp_msg_handle(cmd *msg, sockaddr_in *send_addr);
-    void *udp_msg_process();
+    int udp_msg_process();
 };
 
 #endif

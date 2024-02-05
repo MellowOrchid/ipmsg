@@ -109,7 +109,7 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
     }
 }
 
-void *udp_progress::udp_msg_process()
+int udp_progress::udp_msg_process()
 {
     unsigned addrLen = sizeof(udp_sock_addr);
     int recvbytes;
