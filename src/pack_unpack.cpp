@@ -9,7 +9,7 @@
 void transcode(cmd &object, char buffer[], int len)
 {
     char version[50];
-    sscanf(buffer, "%[^:]:%[^:]:%[^:]:%[^:]:%d:%[^\n]",
+    sscanf(buffer, "%[^:]:%[^:]:%[^:]:%[^:]:%d:%[^\003]",
            version, object.id, object.name, object.hostname, &object.cmdid, object.buf);
 }
 

@@ -155,7 +155,8 @@ void *udp_progress::udp_msg_process()
         if ((recvbytes = recvfrom(udp_sock, recvbuf, sizeof(recvbuf), 0,
                                   (sockaddr *)&udp_sock_addr, &addrLen)) != -1)
         {
-            recvbuf[recvbytes] = '\0';
+            recvbuf[recvbytes] = 3;
+            recvbuf[recvbytes + 1] = 0;
             lmsg = "接收到 UDP 数据包：";
             wlog::log(lmsg);
             wlog::log(recvbuf);
