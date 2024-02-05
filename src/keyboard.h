@@ -16,7 +16,7 @@ private:
 public:
     keyboard();
     ~keyboard();
-    int *kb_scan();
+    int kb_scan();
     void help_cmd();
     void users_cmd();
     void exit_cmd();

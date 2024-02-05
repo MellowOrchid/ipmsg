@@ -16,7 +16,7 @@ keyboard::keyboard() {}
 keyboard::~keyboard() {}
 
 /** 键盘输入 */
-int *keyboard::kb_scan()
+int keyboard::kb_scan()
 {
     int recvBytes;
     string ucmd;

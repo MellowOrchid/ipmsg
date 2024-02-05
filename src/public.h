@@ -1,7 +1,8 @@
 ﻿#include <list>
+#include <string>
 #include "user.h"
 #include "userlist.h"
-using std::list;
+using std::list, std::string;
 
 #ifndef _PUBLIC_H_
 #define _PUBLIC_H_
