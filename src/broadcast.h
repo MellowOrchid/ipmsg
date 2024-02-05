@@ -9,9 +9,8 @@ class broadcast
 {
 private:
     int optval;
-    char buffer[1024];
+    char buffer[1024], ip[20];
     userlist ulist_impl;
-    string ip;
     sockaddr_in servaddr;
 
 public:

@@ -79,20 +79,13 @@ void broadcast::bc()
         exit(1);
     }
 
-    char lip[20];
-    for (int i = 0; i < ip.length(); i++)
-    {
-        lip[i] = ip[i];
-    }
-    lip[ip.length()] = 0;
-
     setsockopt(udp_sock, SOL_SOCKET, SO_BROADCAST, &optval, sizeof(optval));
 
     memset(&servaddr, 0, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(MSG_PORT);
     // servaddr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
-    inet_pton(AF_INET, lip, &servaddr.sin_addr);
+    inet_pton(AF_INET, ip, &servaddr.sin_addr);
 
     coding(buffer, IPMSG_BR_ENTRY, myname);
     send(buffer);
