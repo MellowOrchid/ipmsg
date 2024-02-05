@@ -10,6 +10,7 @@
 #include "IPMSG.H"
 #include "write_log.h"
 #include "keyboard.h"
+#include "filelist.h"
 using std::cerr, std::cout;
 
 udp_progress::udp_progress() {}
@@ -39,6 +40,7 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
             cerr << lmsg << '\n';
         }
     }
+
     // 接收到应答上线信息
     if (GET_MODE(msg->cmdid) == IPMSG_ANSENTRY)
     {
@@ -48,6 +50,7 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
             ulist_impl.addUser(send_addr->sin_addr, msg->name, msg->hostname);
         }
     }
+
     // 接收到用户下线信息
     if (GET_MODE(msg->cmdid) == IPMSG_BR_EXIT)
     {
@@ -57,6 +60,7 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
             ulist_impl.delUser(send_addr->sin_addr);
         }
     }
+
     // 接收到消息
     if (GET_MODE(msg->cmdid) == IPMSG_SENDMSG)
     {
@@ -72,34 +76,37 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
              << msg->buf << "\n\n"
              << "请继续写：" << std::flush; // 刷新缓冲区，使其立即打印
     }
+
     // 接收到文件
-    // if ((msg->cmdid & IPMSG_FILEATTACHOPT) == IPMSG_FILEATTACHOPT)
-    // {
-    //     char codingbuff[BUFF_SIZE];
-    //     coding(codingbuff, IPMSG_RECVMSG, msg->id);
-    //     sendto(udp_sock, codingbuff, strlen(codingbuff), 0,
-    //            (struct sockaddr *)&udp_sock_addr, sizeof(udp_sock_addr));
-    //     struct rcvfile rcvfiles;
-    //     memset(&rcvfiles, 0, sizeof(rcvfiles));
-    //     rcvfiles.sin_addr = udp_sock_addr.sin_addr;
-    //     char *p1, *p2, i, *pp;
-    //     p1 = strrchr(recvbuf, 0);
-    //     printf("接收到包含文件信息的UDP数据包:%s \n", recvbuf);
-    //     // printf("接收到的数据包解析：%s\n",p1);
-    //     p2 = (p1 + 1);
-    //     // printf("接收到的数据包再解析：%s\n",p2);
-    //     sscanf(p2, "%lx:%[^:]:%lx", &rcvfiles.num, rcvfiles.name, &rcvfiles.size);
-    //     pp = strtok(p2, ":");
-    //     for (i = 0; i < strlen(pp); i++)
-    //     {
-    //         tmp = tmp * 10 + (*p2 - 0x30);
-    //         p2++;
-    //     }
-    //     rcvfiles.num = tmp;
-    //     printf("用户: %s向您发送文件：", inet_ntoa(udp_sock_addr.sin_addr));
-    //     printf("%s\n", rcvfiles.name);
-    //     add_rcvFile(&rcvfiles.sin_addr, rcvfiles.name, rcvfiles.num, rcvfiles.size);
-    // }
+    if ((msg->cmdid & IPMSG_FILEATTACHOPT) == IPMSG_FILEATTACHOPT)
+    {
+        char codingbuff[BUFF_SIZE];
+        char *csend, *pp;
+        coding(codingbuff, IPMSG_RECVMSG, msg->id);
+        sendto(udp_sock, codingbuff, strlen(codingbuff), 0,
+               (sockaddr *)&udp_sock_addr, sizeof(sockaddr_in));
+        rcvfile rcvd_file;
+
+        lmsg = "接收到包含文件信息的 UDP 数据包：";
+        wlog::log(lmsg);
+
+        rcvd_file.sin_addr = udp_sock_addr.sin_addr;
+        csend = strrchr(recvbuf, 0) + 1;
+        wlog::log(csend);
+
+        sscanf(csend, "%lx:%[^:]:%lx", &rcvd_file.num, rcvd_file.name, &rcvd_file.size);
+        cout << "\n位于[" << inet_ntoa(udp_sock_addr.sin_addr) << "]的【"
+             << msg->name << "】向您发送文件：" << rcvd_file.name << "\n\n"
+             << "请继续写：" << std::flush; // 刷新缓冲区，使其立即打印
+        pp = strtok(csend, ":");
+        for (int i = 0; i < strlen(pp); i++)
+        {
+            tmp = tmp * 10 + (*csend - 0x30);
+            csend++;
+        }
+        rcvd_file.num = tmp;
+        receive_file_list.push_back(rcvd_file);
+    }
 }
 
 void *udp_progress::udp_msg_process()

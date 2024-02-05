@@ -6,12 +6,15 @@
 #include "broadcast.h"
 #include "udp_progress.h"
 #include "write_log.h"
+#include "filelist.h"
 using std::cin, std::cout, std::string, std::thread;
 
 int udp_sock;
-string lmsg;
 char myname[20], hname[20];
+string lmsg;
 list<user> ulist;
+list<sendfile> send_file_list;
+list<rcvfile> receive_file_list;
 
 int main()
 {

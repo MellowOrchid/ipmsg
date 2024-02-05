@@ -2,6 +2,7 @@
 #include <string>
 #include "user.h"
 #include "userlist.h"
+#include "filelist.h"
 using std::list, std::string;
 
 #ifndef _PUBLIC_H_
@@ -21,5 +22,7 @@ extern sockaddr_in udp_sock_addr;
 extern sockaddr_in tcp_sock_addr;
 
 extern list<user> ulist;
+extern list<sendfile> send_file_list;
+extern list<rcvfile> receive_file_list;
 
 #endif

@@ -20,6 +20,7 @@ public:
     void help_cmd();
     void users_cmd();
     void exit_cmd();
+    void RFL_cmd();
     void sendto_cmd(string cmd);
 };
 

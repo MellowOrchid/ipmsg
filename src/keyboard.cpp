@@ -36,6 +36,8 @@ int keyboard::kb_scan()
             users_cmd();
         else if (ucmd.find("sendto") != -1)
             sendto_cmd(ucmd);
+        else if (ucmd == "RFL" || ucmd == "rfl")
+            RFL_cmd();
         else if (ucmd == "exit")
         {
             exit_cmd();
@@ -79,7 +81,7 @@ void keyboard::users_cmd()
     cout << "\n展示用户：\n";
     if (ulist.empty())
     {
-        cout << "列表为空。\n";
+        cout << "列表为空。\n\n";
         return;
     }
 
@@ -176,4 +178,20 @@ bool keyboard::hasUser(string destU)
         }
     }
     return exist;
+}
+
+/** 收到的文件 */
+void keyboard::RFL_cmd()
+{
+    cout << "\n收到的文件：\n";
+    if (receive_file_list.empty())
+    {
+        cout << "列表为空。\n\n";
+        return;
+    }
+
+    for (auto &&i : receive_file_list)
+        cout << "名称：" << i.name << "\t来自：" << inet_ntoa(i.sin_addr) << '\n';
+
+    cout << '\n';
 }
