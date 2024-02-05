@@ -18,6 +18,8 @@ int main()
     lmsg = "===== 程序开始 =====";
     wlog::log(lmsg);
 
+    system("ifconfig");
+
     keyboard kb;
     broadcast broadcast;
     udp_progress udp_prgs;

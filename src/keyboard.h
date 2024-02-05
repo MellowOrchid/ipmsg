@@ -8,10 +8,10 @@ using std::list;
 class keyboard
 {
 private:
-    string dest;
-    char codingbuff[BUFF_SIZE], message[BUFFER_SIZE];
     int result;
     bool hasUser(string destU);
+    char codingbuff[BUFF_SIZE], message[BUFFER_SIZE], br_ip[20];
+    string dest;
 
 public:
     keyboard();

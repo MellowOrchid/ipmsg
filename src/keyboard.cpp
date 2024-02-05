@@ -12,7 +12,12 @@ using std::cin, std::cout, std::cerr, std::string, std::vector, std::list;
 
 sockaddr_in dest_addr;
 
-keyboard::keyboard() {}
+keyboard::keyboard()
+{
+    cout << "广播 IP：";
+    cin >> br_ip;
+}
+
 keyboard::~keyboard() {}
 
 /** 键盘输入 */
@@ -87,6 +92,30 @@ void keyboard::users_cmd()
 /** 退出 */
 void keyboard::exit_cmd()
 {
+    sockaddr_in exit_send_addr;
+    int sendBytes;
+    char buff[BUFF_SIZE], msg[2];
+    memset(&buff, 0, sizeof(buff));
+
+    // 设置套接字类型
+    int set = 1;
+    setsockopt(udp_sock, SOL_SOCKET, SO_BROADCAST, &set, sizeof(int));
+    memset(&exit_send_addr, 0, sizeof(exit_send_addr));
+    exit_send_addr.sin_family = AF_INET;
+    exit_send_addr.sin_port = htons(MSG_PORT);
+    inet_pton(AF_INET, br_ip, &exit_send_addr.sin_addr);
+    int len = sizeof(exit_send_addr);
+    msg[0] = '0';
+    msg[1] = 0;
+    // 发送 IPMSG_BR_EXIT 信息
+    coding(buff, IPMSG_BR_EXIT, msg);
+    sendBytes = sendto(udp_sock, buff, strlen(buff), 0, (sockaddr *)&exit_send_addr, len);
+    if (sendBytes == -1)
+    {
+        lmsg = "发送 IPMSG_BR_EXIT 信息失败";
+        wlog::log(lmsg);
+        cerr << lmsg << '\n';
+    }
     cout << "程序退出……\n";
 }
 

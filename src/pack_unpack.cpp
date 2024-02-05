@@ -20,8 +20,6 @@ int coding(char *buffer, unsigned int cmd, char *append)
     time_t h;
     time(&h);
     gethostname(hname, sizeof(hname));
-    if (append == NULL)
-        *append = '0';
     sprintf(buffer, "1:%ld:%s:%s:%d:%s", h, myname, hname, cmd, append);
 
     return 0;
