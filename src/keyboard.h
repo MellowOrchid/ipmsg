@@ -22,6 +22,7 @@ public:
     void exit_cmd();
     void RFL_cmd();
     void sendto_cmd(string cmd);
+    void getfile_cmd(string cmd);
 };
 
 #endif

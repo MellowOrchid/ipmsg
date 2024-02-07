@@ -2,15 +2,22 @@
 #include <cstring>
 #include <arpa/inet.h>
 #include <vector>
+#include <fstream>
+#include <unistd.h>
+#include <filesystem>
 #include "user.h"
 #include "public.h"
 #include "keyboard.h"
 #include "pack_unpack.h"
 #include "IPMSG.H"
+#include "filelist.h"
 #include "write_log.h"
-using std::cin, std::cout, std::cerr, std::string, std::vector, std::list;
+
+using std::cin, std::cout, std::cerr, std::string, std::vector, std::list, std::ofstream, std::ios;
+namespace fs = std::filesystem;
 
 sockaddr_in dest_addr;
+filelist flist_impl;
 
 keyboard::keyboard()
 {
@@ -36,6 +43,8 @@ int keyboard::kb_scan()
             users_cmd();
         else if (ucmd.find("sendto") != -1)
             sendto_cmd(ucmd);
+        else if (ucmd.find("getfile") != -1)
+            getfile_cmd(ucmd);
         else if (ucmd == "RFL" || ucmd == "rfl")
             RFL_cmd();
         else if (ucmd == "exit")
@@ -194,4 +203,132 @@ void keyboard::RFL_cmd()
         cout << "名称：" << i.name << "\t来自：" << inet_ntoa(i.sin_addr) << '\n';
 
     cout << '\n';
+}
+
+/** 接收文件 */
+void keyboard::getfile_cmd(string cmd)
+{
+    string fileName = cmd.substr(8);
+    string directoryPath = "./files";
+
+    lmsg = "准备接收文件";
+    wlog::log(lmsg);
+    wlog::log(fileName);
+    cout << lmsg << '\n';
+
+    int sockfd, cnct_rst = 0, bytesRead, sendbytes;
+    char sendbuf[BUFFER_SIZE], cmd_buf[BUFFER_SIZE];
+    rcvfile file = flist_impl.find_file(fileName);
+    if (file.size == 0)
+    {
+        lmsg = "文件未找到";
+        wlog::log(lmsg);
+        cerr << lmsg << "\n\n";
+        return;
+    }
+
+    // 连接
+    sockaddr_in serverAddr;
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_port = htons(MSG_PORT);
+    serverAddr.sin_addr.s_addr = file.sin_addr.s_addr;
+    // 创建套接字
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    lmsg = "套接字结果：";
+    wlog::log(lmsg);
+    wlog::log(sockfd);
+    if (sockfd < 0)
+    {
+        lmsg = "未能创建套接字";
+        wlog::log(lmsg);
+        cerr << lmsg << "\n\n";
+        return;
+    }
+
+    lmsg = "开始连接";
+    wlog::log(lmsg);
+    cout << lmsg << '\n';
+    cnct_rst = connect(sockfd, (sockaddr *)&serverAddr, sizeof(sockaddr_in));
+    lmsg = "连接结果：";
+    wlog::log(lmsg);
+    wlog::log(sockfd);
+    if (cnct_rst == -1)
+    {
+        lmsg = "无法连接到对方";
+        wlog::log(lmsg);
+        cerr << lmsg << "\n\n";
+        return;
+    }
+
+    // 检查目录是否存在
+    if (!fs::exists(directoryPath))
+    {
+        lmsg = "没有 `files` 这个目录";
+        wlog::log(lmsg);
+
+        // 目录不存在，创建目录
+        try
+        {
+            fs::create_directory(directoryPath);
+            lmsg = "新建成功";
+            wlog::log(lmsg);
+        }
+        catch (const fs::filesystem_error &e)
+        {
+            lmsg = "创建目录失败";
+            wlog::log(lmsg);
+            wlog::log(e.what());
+            cerr << lmsg << "：" << e.what() << '\n';
+        }
+    }
+
+    ofstream ofs("files/" + fileName, ios::binary);
+    if (!ofs.is_open())
+    {
+        lmsg = "无法写入文件";
+        wlog::log(lmsg);
+        cerr << lmsg << "\n\n";
+        return;
+    }
+
+    sprintf(cmd_buf, "%lx:%lx:%d", file.pkgnum, file.num, 0);
+    cmd::coding(codingbuff, IPMSG_GETFILEDATA, cmd_buf);
+    lmsg = "发送 IPMSG_GETFILEDATA 打包结果：";
+    wlog::log(lmsg);
+    wlog::log(cmd_buf);
+    wlog::log(codingbuff);
+
+    sendbytes = send(sockfd, codingbuff, strlen(codingbuff), 0);
+    lmsg = "发送 IPMSG_GETFILEDATA 结果：";
+    wlog::log(lmsg);
+    wlog::log(sendbytes);
+    if (sendbytes == -1)
+    {
+        lmsg = "发送 IPMSG_GETFILEDATA 失败";
+        wlog::log(lmsg);
+        return;
+    }
+
+    // 接收
+    while ((bytesRead = recv(sockfd, sendbuf, BUFFER_SIZE, 0)) > 0)
+        ofs.write(sendbuf, bytesRead);
+
+    if (bytesRead == -1)
+    {
+        lmsg = "无法接收数据";
+        wlog::log(lmsg);
+        cerr << lmsg << "\n\n";
+        return;
+    }
+
+    // fs::path absolutePath = fs::absolute(fileName);
+
+    lmsg = "成功接收数据并写入文件：";
+    wlog::log(lmsg);
+    // wlog::log(absolutePath);
+    cout << lmsg << /*absolutePath <<*/ "\n\n";
+
+    // 关闭套接字和文件
+    close(sockfd);
+    ofs.close();
 }
