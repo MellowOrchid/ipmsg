@@ -210,7 +210,7 @@ void keyboard::RFL_cmd()
     cout << '\n';
 }
 
-/** 收到的文件 */
+/** 发送的文件 */
 void keyboard::SFL_cmd()
 {
     cout << "\n发送的文件：\n";
@@ -221,7 +221,7 @@ void keyboard::SFL_cmd()
     }
 
     for (auto &&i : send_file_list)
-        cout << "名称：" << i.name << "\t来自：" << inet_ntoa(i.sin_addr) << '\n';
+        cout << "名称：" << i.name << "\t去往：" << inet_ntoa(i.sin_addr) << '\n';
 
     cout << '\n';
 }
