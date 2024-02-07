@@ -281,8 +281,8 @@ void keyboard::getfile_cmd(string cmd)
             cerr << lmsg << "：" << e.what() << '\n';
         }
     }
-
-    ofstream ofs("files/" + fileName, ios::binary);
+    fileName = "files/" + fileName;
+    ofstream ofs(fileName, ios::binary);
     if (!ofs.is_open())
     {
         lmsg = "无法写入文件";
@@ -321,12 +321,12 @@ void keyboard::getfile_cmd(string cmd)
         return;
     }
 
-    // fs::path absolutePath = fs::absolute(fileName);
+    fs::path absolutePath = fs::absolute(fileName);
 
     lmsg = "成功接收数据并写入文件：";
     wlog::log(lmsg);
     // wlog::log(absolutePath);
-    cout << lmsg << /*absolutePath <<*/ "\n\n";
+    cout << lmsg << absolutePath << "\n\n";
 
     // 关闭套接字和文件
     close(sockfd);
