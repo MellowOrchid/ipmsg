@@ -16,10 +16,7 @@ public:
     user();
     user(in_addr &sin_addr, string name, string hostname);
     ~user();
-    bool operator==(const user &other) const
-    {
-        return sin_addr.s_addr == other.sin_addr.s_addr;
-    }
+    bool operator==(const user &other) const;
 };
 
 #endif

@@ -1,12 +1,12 @@
-﻿#include <list>
+﻿#ifndef _PUBLIC_H_
+#define _PUBLIC_H_
+
+#include <list>
 #include <string>
 #include "user.h"
 #include "userlist.h"
 #include "file.h"
 using std::list, std::string;
-
-#ifndef _PUBLIC_H_
-#define _PUBLIC_H_
 
 #define BUFF_SIZE 128
 #define MSG_PORT 2425
