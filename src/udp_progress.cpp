@@ -11,6 +11,7 @@
 #include "write_log.h"
 #include "keyboard.h"
 #include "filelist.h"
+#define OFFLINE 9
 using std::cerr, std::cout;
 
 udp_progress::udp_progress() {}
@@ -175,6 +176,10 @@ int udp_progress::udp_msg_process()
             udp_msg_handle(&cmd_obj, &udp_sock_addr);
             lmsg = "执行完成";
             wlog::log(lmsg);
+
+            // 接收到下线信息
+            if (cmd_obj.cmdid == IPMSG_BR_EXIT && !strcmp(cmd_obj.name, myname))
+                break;
         }
         else
         {
