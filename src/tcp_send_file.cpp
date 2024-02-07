@@ -8,6 +8,7 @@
 #include "public.h"
 #include "tcp_send_file.h"
 #include "write_log.h"
+
 using std::cout, std::cerr, std::ifstream;
 
 // 发送文件
@@ -20,22 +21,8 @@ void tcp_send_file()
     char recvbuf[BUFF_SIZE];
     char sendbuf[BUFFER_SIZE];
     ifstream ifs;
-    sockaddr_in serv_addr, cli_addr;
     cmd cmd_obj;
     sendfile sdfile;
-
-    memset(&serv_addr, 0, sizeof(serv_addr));
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(MSG_PORT);
-    serv_addr.sin_addr.s_addr = INADDR_ANY;
-
-    if (bind(tcp_sock, (sockaddr *)&serv_addr, sizeof(sockaddr_in)) < 0)
-    {
-        lmsg = "未能绑定 TCP 套接字";
-        wlog::log(lmsg);
-        cerr << lmsg << '\n';
-        exit(2);
-    }
 
     if (listen(tcp_sock, 10))
     {
@@ -50,7 +37,8 @@ void tcp_send_file()
         cnct_sockt = accept(tcp_sock, (sockaddr *)&tcp_sock_addr, &len);
         lmsg = "TCP 连接成功";
         wlog::log(lmsg);
-        cout << '\n' << lmsg << '\n';
+        cout << '\n'
+             << lmsg << '\n';
 
         recvbytes = recv(cnct_sockt, recvbuf, sizeof(recvbuf), 0);
         recvbuf[recvbytes] = '\003';
@@ -62,6 +50,7 @@ void tcp_send_file()
         char version[50];
         sscanf(recvbuf, "%[^:]:%[^:]:%[^:]:%[^:]:%d:%[^\003]", version, rcv, cmd_obj.name, cmd_obj.hostname, &cmd_obj.cmdid, cmd_obj.buf);
 
+        // 发文件
         if (GET_MODE(cmd_obj.cmdid) == IPMSG_GETFILEDATA)
         {
             sscanf(cmd_obj.buf, "%lx:%ld", &sdfile.pkgnum, &sdfile.num);
@@ -100,5 +89,8 @@ void tcp_send_file()
                  << "请继续写：" << std::flush;
             close(cnct_sockt);
         }
+    
+        if (cmd_obj.cmdid == OFFLINE)
+            break;        
     }
 }

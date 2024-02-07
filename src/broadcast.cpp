@@ -35,7 +35,7 @@ void broadcast::send(const string &message)
     wlog::log(message.length());
 
     int result = sendto(udp_sock, message.c_str(), message.size(), 0,
-                        (sockaddr *)&servaddr, sizeof(servaddr));
+                        (sockaddr *)&udp_serv_addr, sizeof(udp_serv_addr));
 
     lmsg = "套接字发送结果：";
     wlog::log(lmsg);
@@ -88,19 +88,32 @@ void broadcast::bc()
         cerr << lmsg << '\n';
         exit(1);
     }
+
+    memset(&tcp_serv_addr, 0, sizeof(tcp_serv_addr));
+    tcp_serv_addr.sin_family = AF_INET;
+    tcp_serv_addr.sin_port = htons(MSG_PORT);
+    tcp_serv_addr.sin_addr.s_addr = INADDR_ANY;
+    if (bind(tcp_sock, (sockaddr *)&tcp_serv_addr, sizeof(sockaddr_in)) < 0)
+    {
+        lmsg = "未能绑定 TCP 套接字";
+        wlog::log(lmsg);
+        cerr << lmsg << '\n';
+        exit(2);
+    }
+
     setsockopt(udp_sock, SOL_SOCKET, SO_BROADCAST, &optval, sizeof(optval));
 
-    memset(&servaddr, 0, sizeof(servaddr));
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(MSG_PORT);
+    memset(&udp_serv_addr, 0, sizeof(udp_serv_addr));
+    udp_serv_addr.sin_family = AF_INET;
+    udp_serv_addr.sin_port = htons(MSG_PORT);
     // servaddr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
-    inet_pton(AF_INET, ip, &servaddr.sin_addr);
+    inet_pton(AF_INET, ip, &udp_serv_addr.sin_addr);
 
     coding(buffer, IPMSG_BR_ENTRY, myname);
     send(buffer);
 
-    user u(servaddr.sin_addr, myname, hname);
-    if (!ulist_impl.hasUser(servaddr.sin_addr))
+    user u(udp_serv_addr.sin_addr, myname, hname);
+    if (!ulist_impl.hasUser(udp_serv_addr.sin_addr))
     {
         ulist.push_front(u);
     }

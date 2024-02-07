@@ -11,9 +11,11 @@ using std::list, std::string;
 #define BUFF_SIZE 128
 #define MSG_PORT 2425
 #define BUFFER_SIZE 1024
+#define OFFLINE 939
 
 extern char myname[20];
 extern char hname[20];
+extern char ip[20];
 extern string lmsg;
 
 extern int udp_sock;

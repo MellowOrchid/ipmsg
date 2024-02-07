@@ -14,6 +14,7 @@ private:
     char codingbuff[BUFF_SIZE], message[BUFFER_SIZE], br_ip[20];
     string dest;
     userlist ulist_impl;
+    sockaddr_in client_addr;
     vector<string> names, cmds;
 
 public:

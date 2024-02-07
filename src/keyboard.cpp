@@ -132,6 +132,22 @@ void keyboard::exit_cmd()
         wlog::log(lmsg);
         cerr << lmsg << '\n';
     }
+    client_addr.sin_family = AF_INET;
+    client_addr.sin_port = htons(MSG_PORT);
+    client_addr.sin_addr.s_addr = inet_addr(ip);
+
+    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (connect(sockfd, (sockaddr *)&client_addr, sizeof(sockaddr_in)) < 0)
+    {
+        cerr << "connect server failed";
+        exit(1);
+    }
+
+    string response = "1:0003:now:host:";
+    response += std::to_string(OFFLINE);
+    response += ":now";
+    send(sockfd, response.c_str(), response.size(), 0);
+
     cout << "程序退出……\n";
 }
 

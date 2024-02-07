@@ -11,7 +11,6 @@
 #include "write_log.h"
 #include "keyboard.h"
 #include "file.h"
-#define OFFLINE 9
 using std::cerr, std::cout;
 
 udp_progress::udp_progress() {}
