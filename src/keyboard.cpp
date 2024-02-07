@@ -23,6 +23,21 @@ keyboard::keyboard()
 {
     cout << "广播 IP：";
     cin >> br_ip;
+
+    names.push_back("显示好友列表");
+    names.push_back("给好友发送消息");
+    names.push_back("显示发送文件列表");
+    names.push_back("显示接收文件列表");
+    names.push_back("发送文件");
+    names.push_back("接收文件");
+    names.push_back("退出程序");
+    cmds.push_back("\t\tusers");
+    cmds.push_back("\tsendto [好友名]");
+    cmds.push_back("\tSFL");
+    cmds.push_back("\tRFL");
+    cmds.push_back("\t\tsendfile [好友名]");
+    cmds.push_back("\t\tgetfile [文件名]");
+    cmds.push_back("\t\texit");
 }
 
 keyboard::~keyboard() {}
@@ -47,6 +62,8 @@ int keyboard::kb_scan()
             getfile_cmd(ucmd);
         else if (ucmd == "RFL" || ucmd == "rfl")
             RFL_cmd();
+        else if (ucmd == "SFL" || ucmd == "sfl")
+            SFL_cmd();
         else if (ucmd == "exit")
         {
             exit_cmd();
@@ -62,22 +79,6 @@ int keyboard::kb_scan()
 /** 帮助 */
 void keyboard::help_cmd()
 {
-    vector<string> names, cmds;
-    names.push_back("显示好友列表");
-    names.push_back("给好友发送消息");
-    names.push_back("显示发送文件列表");
-    names.push_back("显示接收文件列表");
-    names.push_back("发送文件");
-    names.push_back("接收文件");
-    names.push_back("退出程序");
-    cmds.push_back("\t\tusers");
-    cmds.push_back("\tsendto [好友名]");
-    cmds.push_back("\tSFL");
-    cmds.push_back("\tRFL");
-    cmds.push_back("\t\tsendfile [好友名]");
-    cmds.push_back("\t\tgetfile [文件名]");
-    cmds.push_back("\t\texit");
-
     cout << "\n使用指南：\n";
     for (int i = 0; i < names.size(); i++)
         cout << names.at(i) << "：" << cmds.at(i) << '\n';
@@ -200,6 +201,22 @@ void keyboard::RFL_cmd()
     }
 
     for (auto &&i : receive_file_list)
+        cout << "名称：" << i.name << "\t来自：" << inet_ntoa(i.sin_addr) << '\n';
+
+    cout << '\n';
+}
+
+/** 收到的文件 */
+void keyboard::SFL_cmd()
+{
+    cout << "\n发送的文件：\n";
+    if (send_file_list.empty())
+    {
+        cout << "列表为空。\n\n";
+        return;
+    }
+
+    for (auto &&i : send_file_list)
         cout << "名称：" << i.name << "\t来自：" << inet_ntoa(i.sin_addr) << '\n';
 
     cout << '\n';
