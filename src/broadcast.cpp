@@ -69,16 +69,25 @@ void broadcast::bc()
     wlog::log(MSG_PORT);
     cout << lmsg << MSG_PORT << '\n';
 
-    // 创建套接字
+    // 创建 UDP 套接字
     udp_sock = socket(AF_INET, SOCK_DGRAM, 0);
     if (udp_sock < 0)
     {
-        lmsg = "未能创建套接字";
+        lmsg = "未能创建 UDP 套接字";
         wlog::log(lmsg);
         cerr << lmsg << '\n';
         exit(1);
     }
 
+    // 创建 TCP 套接字
+    tcp_sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (tcp_sock < 0)
+    {
+        lmsg = "未能创建 TCP 套接字";
+        wlog::log(lmsg);
+        cerr << lmsg << '\n';
+        exit(1);
+    }
     setsockopt(udp_sock, SOL_SOCKET, SO_BROADCAST, &optval, sizeof(optval));
 
     memset(&servaddr, 0, sizeof(servaddr));

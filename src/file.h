@@ -16,6 +16,7 @@ public:
     in_addr sin_addr;  // 用户 IP 地址
     sendfile();
     ~sendfile();
+    bool operator==(const sendfile &other) const;
 };
 
 class rcvfile
