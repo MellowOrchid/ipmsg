@@ -6,7 +6,7 @@
 #include "broadcast.h"
 #include "udp_progress.h"
 #include "write_log.h"
-#include "filelist.h"
+#include "file.h"
 using std::cin, std::cout, std::string, std::thread;
 
 int udp_sock;

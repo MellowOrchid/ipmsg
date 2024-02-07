@@ -2,7 +2,7 @@
 #include <string>
 #include "user.h"
 #include "userlist.h"
-#include "filelist.h"
+#include "file.h"
 using std::list, std::string;
 
 #ifndef _PUBLIC_H_
