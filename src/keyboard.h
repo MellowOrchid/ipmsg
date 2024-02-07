@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "user.h"
+#include "userlist.h"
 using std::vector;
 
 class keyboard
@@ -12,6 +13,7 @@ private:
     bool hasUser(string destU);
     char codingbuff[BUFF_SIZE], message[BUFFER_SIZE], br_ip[20];
     string dest;
+    userlist ulist_impl;
     vector<string> names, cmds;
 
 public:
@@ -25,6 +27,7 @@ public:
     void SFL_cmd();
     void sendto_cmd(string cmd);
     void getfile_cmd(string cmd);
+    void sendfile_cmd(string cmd);
 };
 
 #endif

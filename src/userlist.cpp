@@ -47,3 +47,11 @@ int userlist::delUser(in_addr sin_addr)
 
     return 0;
 }
+
+bool userlist::hasUser(string name)
+{
+    for (auto &&i : ulist)
+        if (i.name == name)
+            return true;
+    return false;
+}

@@ -15,6 +15,7 @@ string lmsg;
 list<user> ulist;
 list<sendfile> send_file_list;
 list<rcvfile> receive_file_list;
+sockaddr_in udp_sock_addr;
 
 int main()
 {

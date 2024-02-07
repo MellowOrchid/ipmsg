@@ -15,6 +15,7 @@ public:
     userlist();
     ~userlist();
     bool hasUser(in_addr &sin_addr);
+    bool hasUser(string name);
     int addUser(in_addr &sin_addr, string name, string hostname);
     int delUser(in_addr sin_addr);
 };

@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <filesystem>
 #include "user.h"
+#include "userlist.h"
 #include "public.h"
 #include "keyboard.h"
 #include "pack_unpack.h"
@@ -13,7 +14,8 @@
 #include "filelist.h"
 #include "write_log.h"
 
-using std::cin, std::cout, std::cerr, std::string, std::vector, std::list, std::ofstream, std::ios;
+using std::cin, std::cout, std::cerr, std::string, std::vector, std::list,
+    std::ofstream, std::ifstream, std::ios;
 namespace fs = std::filesystem;
 
 sockaddr_in dest_addr;
@@ -60,6 +62,8 @@ int keyboard::kb_scan()
             sendto_cmd(ucmd);
         else if (ucmd.find("getfile") != -1)
             getfile_cmd(ucmd);
+        else if (ucmd.find("sendfile") != -1)
+            sendfile_cmd(ucmd);
         else if (ucmd == "RFL" || ucmd == "rfl")
             RFL_cmd();
         else if (ucmd == "SFL" || ucmd == "sfl")
@@ -348,4 +352,99 @@ void keyboard::getfile_cmd(string cmd)
     // 关闭套接字和文件
     close(sockfd);
     ofs.close();
+}
+
+/** 发送文件 */
+void keyboard::sendfile_cmd(string cmd)
+{
+    dest = cmd.substr(9);
+    lmsg = "尝试发送文件：";
+    wlog::log(lmsg);
+    wlog::log(dest);
+
+    int ren;
+    char codingbuff[BUFF_SIZE];
+    char file_msg[BUFF_SIZE];
+    char file_buff[BUFFER_SIZE];
+    int sendBytes, recvBytes;
+    string filepath;
+    ifstream ifs;
+    sockaddr_in myaddr;
+    sendfile sdfile;
+    user crtuser;
+
+    if (!ulist_impl.hasUser(dest))
+    {
+        lmsg = "没有该用户";
+        wlog::log(lmsg);
+        cerr << lmsg << "\n\n";
+        return;
+    }
+
+    for (auto &&i : ulist)
+        if (i.name == dest)
+        {
+            crtuser = i;
+            break;
+        }
+
+    cout << "输入 `exit` 以取消\n"
+         << "请输入该文件的绝对路径\n"
+         << "发送给【" << dest << "】：" << std::flush;
+
+    getline(cin, filepath);
+    if (filepath == "exit")
+    {
+        lmsg = "用户取消发送";
+        wlog::log(lmsg);
+        cout << lmsg << "\n\n";
+        return;
+    }
+
+    ifs.open(filepath);
+    if (!ifs.is_open())
+    {
+        lmsg = "没有该文件：";
+        wlog::log(lmsg);
+        wlog::log(filepath);
+        cerr << lmsg << filepath << "\n\n";
+        return;
+    }
+
+    sdfile.name = fs::path(filepath).filename();
+    sdfile.num = 0;
+    sdfile.pkgnum = time(NULL);
+    sdfile.size = fs::file_size(filepath);
+    sdfile.sin_addr = crtuser.sin_addr;
+    send_file_list.push_back(sdfile);
+
+    memset(file_buff, 0, sizeof(file_buff));
+    memset(&udp_sock_addr, 0, sizeof(sockaddr_in));
+    udp_sock_addr.sin_family = AF_INET;
+    udp_sock_addr.sin_port = htons(MSG_PORT);
+    udp_sock_addr.sin_addr = crtuser.sin_addr;
+
+    sprintf(file_msg, "%lu:%s:%lx:%lx:%lx", sdfile.num, sdfile.name.c_str(), sdfile.size, sdfile.utime, IPMSG_FILE_REGULAR);
+    cmd::coding(codingbuff, IPMSG_SENDMSG | IPMSG_SENDCHECKOPT | IPMSG_FILEATTACHOPT, file_buff);
+
+    sprintf(file_buff, "%s%c%s", codingbuff, '0', file_msg);
+    sendBytes = sendto(udp_sock, file_buff, strlen(file_buff), 0,
+                       (sockaddr *)&udp_sock_addr, sizeof(sockaddr_in));
+    lmsg = "发送结果：";
+    wlog::log(lmsg);
+    wlog::log(sendBytes);
+
+    if (sendBytes == -1)
+    {
+        lmsg = "未能通知对方接收";
+        wlog::log(lmsg);
+        cerr << lmsg << "\n\n";
+    }
+    else
+    {
+        lmsg = "已成功通知";
+        wlog::log(lmsg);
+        cout << lmsg << "\n\n";
+    }
+    ifs.close();
 }
