@@ -13,6 +13,7 @@ public:
     long pkgnum;       // 包编号
     long utime;        // 修改时间
     string name;       // 文件名
+    string path;       // 绝对路径
     in_addr sin_addr;  // 用户 IP 地址
     sendfile();
     ~sendfile();

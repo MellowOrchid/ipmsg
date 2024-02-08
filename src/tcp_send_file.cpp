@@ -61,7 +61,7 @@ void tcp_send_file()
                     break;
                 }
 
-            ifs.open(sdfile.name);
+            ifs.open(sdfile.path);
             if (!ifs.is_open())
             {
                 lmsg = "未找到文件：";

@@ -427,6 +427,7 @@ void keyboard::sendfile_cmd(string cmd)
     }
 
     sdfile.name = fs::path(filepath).filename();
+    sdfile.path = filepath;
     sdfile.num = 0;
     sdfile.pkgnum = time(NULL);
     sdfile.size = fs::file_size(filepath);
