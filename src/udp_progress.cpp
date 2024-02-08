@@ -187,5 +187,8 @@ int udp_progress::udp_msg_process()
             cerr << lmsg << '\n';
         }
     }
+    lmsg = "UDP 监听结束";
+    wlog::log(lmsg);
+    cout << lmsg << '\n';
     return 0;
 }

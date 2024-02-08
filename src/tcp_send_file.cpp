@@ -72,6 +72,9 @@ void tcp_send_file()
             }
             bzero(sendbuf, BUFFER_SIZE); // 缓冲区清零
 
+            lmsg = "正在发送文件";
+            wlog::log(lmsg);
+            cout << lmsg << '\n';
             // 从文件读取数据并发送到客户端
             while (!ifs.eof())
             {
@@ -93,4 +96,7 @@ void tcp_send_file()
         if (cmd_obj.cmdid == OFFLINE)
             break;        
     }
+    lmsg = "TCP 监听结束";
+    wlog::log(lmsg);
+    cout << lmsg << '\n';
 }

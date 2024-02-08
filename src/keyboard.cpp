@@ -139,13 +139,12 @@ void keyboard::exit_cmd()
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (connect(sockfd, (sockaddr *)&client_addr, sizeof(sockaddr_in)) < 0)
     {
-        cerr << "connect server failed";
-        exit(1);
+        lmsg = "通知 TCP 下线失败";
+        wlog::log(lmsg);
+        cerr << lmsg << '\n';
     }
 
-    string response = "1:0003:now:host:";
-    response += std::to_string(OFFLINE);
-    response += ":now";
+    string response = "1:0003:now:host:" + std::to_string(OFFLINE) + ":now";
     send(sockfd, response.c_str(), response.size(), 0);
 
     cout << "程序退出……\n";
