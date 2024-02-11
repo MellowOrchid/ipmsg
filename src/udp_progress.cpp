@@ -99,7 +99,7 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
              << msg->name << "】向您发送文件：" << rcvd_file.name << "\n\n"
              << "请继续写：" << std::flush; // 刷新缓冲区，使其立即打印
         pp = strtok(csend, ":");
-        for (int i = 0; i < strlen(pp); i++)
+        for (long unsigned i = 0; i < strlen(pp); i++)
         {
             tmp = tmp * 10 + (*csend - 0x30);
             csend++;
@@ -168,8 +168,7 @@ int udp_progress::udp_msg_process()
             wlog::log(lmsg);
             wlog::log(recvbuf);
 
-            memset(&cmd_obj, 0, sizeof(cmd_obj));
-            cmd::transcode(cmd_obj, recvbuf, recvbytes);
+            cmd::transcode(cmd_obj, recvbuf);
             lmsg = "解析完成，开始执行";
             wlog::log(lmsg);
             udp_msg_handle(&cmd_obj, &udp_sock_addr);

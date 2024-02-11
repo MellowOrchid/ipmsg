@@ -9,7 +9,7 @@ cmd::cmd() {}
 cmd::~cmd() {}
 
 // 将接收到的字符串分解为 cmd 结构体
-void cmd::transcode(cmd &object, char buffer[], int len)
+void cmd::transcode(cmd &object, char buffer[])
 {
     char version[50];
     sscanf(buffer, "%[^:]:%[^:]:%[^:]:%[^:]:%d:%[^\003]",

@@ -47,8 +47,8 @@ keyboard::~keyboard() {}
 /** 键盘输入 */
 int keyboard::kb_scan()
 {
-    int recvBytes;
     string ucmd;
+    long unsigned pos = -1;
     getchar(); // 读一个回车
     while (1)
     {
@@ -58,11 +58,11 @@ int keyboard::kb_scan()
 
         if (ucmd == "users")
             users_cmd();
-        else if (ucmd.find("sendto") != -1)
+        else if (ucmd.find("sendto") != pos)
             sendto_cmd(ucmd);
-        else if (ucmd.find("getfile") != -1)
+        else if (ucmd.find("getfile") != pos)
             getfile_cmd(ucmd);
-        else if (ucmd.find("sendfile") != -1)
+        else if (ucmd.find("sendfile") != pos)
             sendfile_cmd(ucmd);
         else if (ucmd == "RFL" || ucmd == "rfl")
             RFL_cmd();
@@ -84,7 +84,7 @@ int keyboard::kb_scan()
 void keyboard::help_cmd()
 {
     cout << "\n使用指南：\n";
-    for (int i = 0; i < names.size(); i++)
+    for (long unsigned i = 0; i < names.size(); i++)
         cout << names.at(i) << "：" << cmds.at(i) << '\n';
     cout << '\n';
 }
@@ -377,14 +377,12 @@ void keyboard::sendfile_cmd(string cmd)
     wlog::log(lmsg);
     wlog::log(dest);
 
-    int ren;
     char codingbuff[BUFF_SIZE];
     char file_msg[BUFF_SIZE];
     char file_buff[BUFFER_SIZE];
-    int sendBytes, recvBytes;
+    int sendBytes;
     string filepath;
     ifstream ifs;
-    sockaddr_in myaddr;
     sendfile sdfile;
     user crtuser;
 
