@@ -13,6 +13,7 @@
 #include "IPMSG.H"
 #include "filelist.h"
 #include "write_log.h"
+#include "history.h"
 
 using std::cin, std::cout, std::cerr, std::string, std::vector, std::list,
     std::ofstream, std::ifstream, std::ios;
@@ -32,6 +33,7 @@ keyboard::keyboard()
     names.push_back("显示接收文件列表");
     names.push_back("发送文件");
     names.push_back("接收文件");
+    names.push_back("查看聊天记录");
     names.push_back("退出程序");
     cmds.push_back("\t\tusers");
     cmds.push_back("\tsendto [好友名]");
@@ -39,6 +41,7 @@ keyboard::keyboard()
     cmds.push_back("\tRFL");
     cmds.push_back("\t\tsendfile [好友名]");
     cmds.push_back("\t\tgetfile [文件名]");
+    cmds.push_back("\t\thistory");
     cmds.push_back("\t\texit");
 }
 
@@ -68,6 +71,8 @@ int keyboard::kb_scan()
             RFL_cmd();
         else if (ucmd == "SFL" || ucmd == "sfl")
             SFL_cmd();
+        else if (ucmd == "history")
+            history_cmd();
         else if (ucmd == "exit")
         {
             exit_cmd();
@@ -461,4 +466,27 @@ void keyboard::sendfile_cmd(string cmd)
         cout << lmsg << "\n\n";
     }
     ifs.close();
+}
+
+/** 历史记录 */
+void keyboard::history_cmd()
+{
+    cout << "\n现有用户列表：\n";
+    list<string> allu = history::get_all();
+    if (allu.empty())
+    {
+        cout << "没有历史记录\n\n";
+        return;
+    }
+
+    for (auto &&i : allu)
+        cout << i << '\n';
+
+    cout << "目标用户名：";
+    getline(cin, dest);
+    if (!history::has_user(dest))
+    {
+        cout << "没有这个用户\n";
+        return;
+    }
 }

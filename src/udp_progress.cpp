@@ -11,6 +11,7 @@
 #include "write_log.h"
 #include "keyboard.h"
 #include "file.h"
+#include "history.h"
 using std::cerr, std::cout;
 
 udp_progress::udp_progress() {}
@@ -24,9 +25,10 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
     {
         // 根据 sin_addr 判断该用户是否存在
         if (!ulist_impl.hasUser(send_addr->sin_addr))
-        {
             ulist_impl.addUser(send_addr->sin_addr, msg->name, msg->hostname);
-        }
+        if (!(history::has_user(msg->name)))
+            history::app_user(msg->name);
+
         char buff[BUFF_SIZE];
         memset(buff, 0, sizeof(buff));
         // 发送 IPMSG_ANSENTRY 信息
@@ -44,11 +46,12 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
     // 接收到应答上线信息
     if (GET_MODE(msg->cmdid) == IPMSG_ANSENTRY)
     {
-        /// 根据 sin_addr 判断该用户是否存在
+        // 根据 sin_addr 判断该用户是否存在
         if (!ulist_impl.hasUser(send_addr->sin_addr))
-        {
             ulist_impl.addUser(send_addr->sin_addr, msg->name, msg->hostname);
-        }
+
+        if (!(history::has_user(msg->name)))
+            history::app_user(msg->name);
     }
 
     // 接收到用户下线信息

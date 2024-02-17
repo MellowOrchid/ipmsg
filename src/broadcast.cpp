@@ -8,6 +8,7 @@
 #include "broadcast.h"
 #include "IPMSG.H"
 #include "public.h"
+#include "history.h"
 using std::cin, std::cout, std::string, std::cerr;
 
 broadcast::broadcast()
@@ -116,4 +117,6 @@ void broadcast::bc()
     user u(udp_serv_addr.sin_addr, myname, hname);
     if (!ulist_impl.hasUser(udp_serv_addr.sin_addr))
         ulist.push_front(u);
+    if (!history::has_user(myname))
+        history::app_user(myname);
 }

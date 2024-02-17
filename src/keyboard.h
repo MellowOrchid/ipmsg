@@ -29,6 +29,7 @@ public:
     void sendto_cmd(string cmd);
     void getfile_cmd(string cmd);
     void sendfile_cmd(string cmd);
+    void history_cmd();
 };
 
 #endif
