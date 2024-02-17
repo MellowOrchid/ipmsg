@@ -9,7 +9,7 @@ BUILD_DIR = ../build
 TARGET = $(BUILD_DIR)/ipmsg
 # 源文件
 SRCS = broadcast.cpp filelist.cpp  main.cpp tcp_send_file.cpp user.cpp write_log.cpp file.cpp
-SRCS += keyboard.cpp pack_unpack.cpp udp_progress.cpp userlist.cpp
+SRCS += keyboard.cpp pack_unpack.cpp udp_progress.cpp userlist.cpp history.cpp
 # 目标文件
 OBJS = $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(SRCS))
 
