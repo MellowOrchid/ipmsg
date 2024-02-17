@@ -4,7 +4,10 @@
 #include <iomanip>
 #include <chrono>
 #include "write_log.h"
-using std::cerr, std::fstream, std::ios;
+using std::cerr, std::string, std::fstream, std::ios;
+
+const string log_file = "log.log";
+fstream fst;
 
 wlog::wlog() {}
 
@@ -16,9 +19,8 @@ void wlog::log(string message)
     auto currentTime = std::chrono::system_clock::now();
     // 将时间点转换为 time_t（自 UTC 1970 年 1 月 1 日起的秒数）
     std::time_t currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
-    fstream fst;
 
-    fst.open("log.log", ios::app);
+    fst.open(log_file, ios::app);
     if (!fst.is_open())
     {
         cerr << "日志文件错误\n";
@@ -37,7 +39,7 @@ void wlog::log(const char *message)
     std::time_t currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
     fstream fst;
 
-    fst.open("log.log", ios::app);
+    fst.open(log_file, ios::app);
     if (!fst.is_open())
     {
         cerr << "日志文件错误\n";
@@ -57,7 +59,7 @@ void wlog::log(int message)
     std::time_t currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
     fstream fst;
 
-    fst.open("log.log", ios::app);
+    fst.open(log_file, ios::app);
     if (!fst.is_open())
     {
         cerr << "日志文件错误\n";
