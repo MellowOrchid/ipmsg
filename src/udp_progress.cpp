@@ -26,7 +26,7 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
         // 根据 sin_addr 判断该用户是否存在
         if (!ulist_impl.hasUser(send_addr->sin_addr))
             ulist_impl.addUser(send_addr->sin_addr, msg->name, msg->hostname);
-        if (!(history::has_user(msg->name)))
+        if (!history::has_user(msg->name))
             history::app_user(msg->name);
 
         char buff[BUFF_SIZE];
@@ -50,7 +50,7 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
         if (!ulist_impl.hasUser(send_addr->sin_addr))
             ulist_impl.addUser(send_addr->sin_addr, msg->name, msg->hostname);
 
-        if (!(history::has_user(msg->name)))
+        if (!history::has_user(msg->name))
             history::app_user(msg->name);
     }
 
@@ -78,6 +78,7 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
              << inet_ntoa(send_addr->sin_addr) << "]的消息：\n"
              << msg->buf << "\n\n"
              << "请继续写：" << std::flush; // 刷新缓冲区，使其立即打印
+        history::write_history(msg->name, myname, msg->buf);
     }
 
     // 接收到文件
