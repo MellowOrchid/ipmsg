@@ -4,12 +4,12 @@
 #include "history.h"
 #include "public.h"
 #include "write_log.h"
-using std::cerr, std::list, std::string, std::ios, std::fstream;
+using std::cout, std::cerr, std::list, std::string, std::ios, std::fstream;
 namespace fs = std::filesystem;
 
 const string all_h_file = "all.txt";
 const string history_dir = "./history/";
-string uname;
+string uname, his_message;
 fstream all_his, one_his;
 list<string> all_users;
 
@@ -211,6 +211,25 @@ void history::write_history(char *op_side, char *who_said, string message, strin
 
     one_his << std::put_time(std::localtime(&currentTime_t), "%Y-%m-%d %H:%M:%S") << '\t'
             << who_said << ": " << message << app << '\n';
+    one_his.close();
+}
+
+void history::read_history(string name)
+{
+    string dest_file = history_dir + name + ".txt";
+    one_his.open(dest_file, ios::in);
+
+    if (!one_his.is_open())
+    {
+        lmsg = "聊天记录：没有记录或无法打开";
+        wlog::log(lmsg);
+        cerr << lmsg << "\n\n";
+        return;
+    }
+
+    while (getline(one_his, his_message))
+        cout << his_message << '\n';
+
     one_his.close();
 }
 

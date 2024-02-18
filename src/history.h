@@ -21,6 +21,7 @@ public:
     static void write_history(char *op_side, char *who_said, char *message);
     static void write_history(string op_side, char *who_said, string message, string app);
     static void write_history(char *op_side, char *who_said, string message, string app);
+    static void read_history(string name);
 };
 
 #endif

@@ -491,4 +491,7 @@ void keyboard::history_cmd()
         cout << "没有这个用户\n";
         return;
     }
+
+    history::read_history(dest);
+    cout << '\n';
 }
