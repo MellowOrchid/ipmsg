@@ -29,6 +29,7 @@ public:
     long pkgnum;       // 包编号
     long utime;        // 修改时间
     char name[256];    // 文件名
+    string whose;      // 来源用户
     in_addr sin_addr;  // 用户 IP 地址
     rcvfile();
     ~rcvfile();

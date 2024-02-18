@@ -8,6 +8,7 @@
 #include "public.h"
 #include "tcp_send_file.h"
 #include "write_log.h"
+#include "history.h"
 
 using std::cout, std::cerr, std::ifstream;
 
@@ -91,6 +92,8 @@ void tcp_send_file()
             cout << lmsg << sdfile.name << "\n\n"
                  << "请继续写：" << std::flush;
             close(cnct_sockt);
+
+            history::write_history(cmd_obj.name, myname, lmsg, sdfile.name);
         }
     
         if (cmd_obj.cmdid == OFFLINE)

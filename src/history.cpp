@@ -20,21 +20,27 @@ history::~history() {}
 list<string> history::get_all()
 {
     ck_dir();
+    all_users.clear();
 
     all_his.open(history_dir + all_h_file, ios::in);
+
+    // 先尝试创建文件
     if (!all_his.is_open())
     {
-        lmsg = "用户名单：无法打开文件";
-        wlog::log(lmsg);
-        cerr << lmsg << "\n\n";
-        // return all_users;
         all_his.close();
         all_his.open(history_dir + all_h_file, ios::out);
         all_his.close();
         all_his.open(history_dir + all_h_file, ios::in);
     }
+    // 如果仍无法打开则报错
+    if (!all_his.is_open())
+    {
+        lmsg = "用户名单：无法打开文件";
+        wlog::log(lmsg);
+        cerr << lmsg << "\n\n";
+        return all_users;
+    }
 
-    all_users.clear();
     while (all_his >> uname)
         all_users.push_back(uname);
 
@@ -149,6 +155,62 @@ void history::write_history(char *op_side, char *who_said, char *message)
 
     one_his << std::put_time(std::localtime(&currentTime_t), "%Y-%m-%d %H:%M:%S") << '\t'
             << who_said << ": " << message << '\n';
+    one_his.close();
+}
+
+/**
+ * @param op_side 与谁交流
+ * @param who_said 谁说的话
+ * @param message 说的什么
+ * @param app 附加信息
+ */
+void history::write_history(string op_side, char *who_said, string message, string app)
+{
+    // 获取当前系统时间点
+    auto currentTime = std::chrono::system_clock::now();
+    // 将时间点转换为 time_t（自 UTC 1970 年 1 月 1 日起的秒数）
+    std::time_t currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
+
+    string dest_file = history_dir + op_side + ".txt";
+    one_his.open(dest_file, ios::app);
+    if (!one_his.is_open())
+    {
+        lmsg = "写入历史记录失败";
+        wlog::log(lmsg);
+        cerr << lmsg << "\n\n";
+        return;
+    }
+
+    one_his << std::put_time(std::localtime(&currentTime_t), "%Y-%m-%d %H:%M:%S") << '\t'
+            << who_said << ": " << message << app << '\n';
+    one_his.close();
+}
+
+/**
+ * @param op_side 与谁交流
+ * @param who_said 谁说的话
+ * @param message 说的什么
+ * @param app 附加信息
+ */
+void history::write_history(char *op_side, char *who_said, string message, string app)
+{
+    // 获取当前系统时间点
+    auto currentTime = std::chrono::system_clock::now();
+    // 将时间点转换为 time_t（自 UTC 1970 年 1 月 1 日起的秒数）
+    std::time_t currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
+
+    string dest_file = history_dir + op_side + ".txt";
+    one_his.open(dest_file, ios::app);
+    if (!one_his.is_open())
+    {
+        lmsg = "写入历史记录失败";
+        wlog::log(lmsg);
+        cerr << lmsg << "\n\n";
+        return;
+    }
+
+    one_his << std::put_time(std::localtime(&currentTime_t), "%Y-%m-%d %H:%M:%S") << '\t'
+            << who_said << ": " << message << app << '\n';
     one_his.close();
 }
 

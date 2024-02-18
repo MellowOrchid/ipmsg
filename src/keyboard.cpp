@@ -367,8 +367,9 @@ void keyboard::getfile_cmd(string cmd)
 
     lmsg = "成功接收数据并写入文件：";
     wlog::log(lmsg);
-    // wlog::log(absolutePath);
+    wlog::log(absolutePath);
     cout << lmsg << absolutePath << "\n\n";
+    history::write_history(file.whose, myname, lmsg, absolutePath);
 
     // 关闭套接字和文件
     close(sockfd);

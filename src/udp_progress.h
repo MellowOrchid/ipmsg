@@ -14,7 +14,6 @@ class udp_progress
 {
 private:
     char recvbuf[BUFF_SIZE];
-    cmd cmd_obj;
     userlist ulist_impl;
     sockaddr_in udp_sock_addr;
 

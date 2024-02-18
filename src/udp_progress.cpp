@@ -74,11 +74,16 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
             sendto(udp_sock, codingbuff, strlen(codingbuff), 0,
                    (struct sockaddr *)&udp_sock_addr, sizeof(udp_sock_addr));
         }
-        cout << "\n接收到【" << msg->name << "】位于["
-             << inet_ntoa(send_addr->sin_addr) << "]的消息：\n"
-             << msg->buf << "\n\n"
-             << "请继续写：" << std::flush; // 刷新缓冲区，使其立即打印
-        history::write_history(msg->name, msg->name, msg->buf);
+
+        // 防止空信息
+        if (msg->buf[0] != 0)
+        {
+            cout << "\n接收到【" << msg->name << "】位于["
+                 << inet_ntoa(send_addr->sin_addr) << "]的消息：\n"
+                 << msg->buf << "\n\n"
+                 << "请继续写：" << std::flush; // 刷新缓冲区，使其立即打印
+            history::write_history(msg->name, msg->name, msg->buf);
+        }
     }
 
     // 接收到文件
@@ -109,6 +114,7 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
             csend++;
         }
         rcvd_file.num = tmp;
+        rcvd_file.whose = msg->name;
         receive_file_list.push_back(rcvd_file);
     }
 }
@@ -162,6 +168,7 @@ int udp_progress::udp_msg_process()
 
     while (1)
     {
+        cmd cmd_obj;
         // 接收用户信息，接收广播信息和广播机器的 IP，不限源
         if ((recvbytes = recvfrom(udp_sock, recvbuf, sizeof(recvbuf), 0,
                                   (sockaddr *)&udp_sock_addr, &addrLen)) != -1)
