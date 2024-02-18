@@ -17,6 +17,8 @@ public:
     static void app_user(char *name);
     static bool has_user(string name);
     static bool has_user(char *name);
+    static void write_history(string op_side, char *who_said, char *message);
+    static void write_history(char *op_side, char *who_said, char *message);
 };
 
 #endif

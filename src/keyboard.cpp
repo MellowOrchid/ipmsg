@@ -192,6 +192,7 @@ void keyboard::sendto_cmd(string cmd)
                  << "与【" << dest << "】的交流结束\n\n";
             break;
         }
+        history::write_history(dest, myname, message);
     }
 }
 
@@ -250,7 +251,7 @@ void keyboard::SFL_cmd()
 void keyboard::getfile_cmd(string cmd)
 {
     string fileName = cmd.substr(8);
-    string directoryPath = "./files";
+    string file_dir = "./files";
 
     lmsg = "准备接收文件";
     wlog::log(lmsg);
@@ -302,7 +303,7 @@ void keyboard::getfile_cmd(string cmd)
     }
 
     // 检查目录是否存在
-    if (!fs::exists(directoryPath))
+    if (!fs::exists(file_dir))
     {
         lmsg = "没有 `files` 这个目录";
         wlog::log(lmsg);
@@ -310,7 +311,7 @@ void keyboard::getfile_cmd(string cmd)
         // 目录不存在，创建目录
         try
         {
-            fs::create_directory(directoryPath);
+            fs::create_directory(file_dir);
             lmsg = "新建成功";
             wlog::log(lmsg);
         }

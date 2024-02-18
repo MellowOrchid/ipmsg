@@ -78,7 +78,7 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
              << inet_ntoa(send_addr->sin_addr) << "]的消息：\n"
              << msg->buf << "\n\n"
              << "请继续写：" << std::flush; // 刷新缓冲区，使其立即打印
-        history::write_history(msg->name, myname, msg->buf);
+        history::write_history(msg->name, msg->name, msg->buf);
     }
 
     // 接收到文件
