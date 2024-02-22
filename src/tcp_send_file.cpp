@@ -12,8 +12,12 @@
 
 using std::cout, std::cerr, std::ifstream;
 
+tcp_send_file::tcp_send_file() {}
+
+tcp_send_file::~tcp_send_file() {}
+
 /** 发送文件 */
-void tcp_send_file()
+void tcp_send_file::send_f()
 {
     int cnct_sockt; // 连接套接字
     int recvbytes;

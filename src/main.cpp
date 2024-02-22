@@ -35,7 +35,7 @@ int main()
     kb.help_cmd();
     thread kb_thrd(&keyboard::kb_scan, &kb);
     thread udp_thrd(&udp_progress::udp_msg_process, &udp_prgs);
-    thread tcp_thrd(tcp_send_file);
+    thread tcp_thrd(&tcp_send_file::send_f);
 
     udp_thrd.join();
     kb_thrd.join();
