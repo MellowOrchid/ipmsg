@@ -12,7 +12,6 @@ private:
     int result;
     bool hasUser(string destU);
     char codingbuff[BUFF_SIZE], message[BUFFER_SIZE];
-    string dest;
     userlist ulist_impl;
     sockaddr_in client_addr;
     vector<string> names, cmds;

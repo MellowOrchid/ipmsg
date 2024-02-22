@@ -17,6 +17,11 @@ using std::cerr, std::cout;
 udp_progress::udp_progress() {}
 udp_progress::~udp_progress() {}
 
+/**
+ * 处理 UDP 数据包
+ * @param msg 传来的数据包
+ * @param send_addr 发送者的地址信息
+ */
 void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
 {
     unsigned long tmp = 0;
@@ -119,7 +124,10 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
     }
 }
 
-int udp_progress::udp_msg_process()
+/**
+ * 用于处理 UDP 信息的进程
+ */
+void udp_progress::udp_msg_process()
 {
     unsigned addrLen = sizeof(udp_sock_addr);
     int recvbytes;
@@ -139,7 +147,7 @@ int udp_progress::udp_msg_process()
         lmsg = "未能创建套接字。";
         wlog::log(lmsg);
         cerr << lmsg << '\n';
-        return 0;
+        return;
     }
     // 设置套接字选项以允许广播
     int broadcastEnable = 1;
@@ -148,7 +156,7 @@ int udp_progress::udp_msg_process()
         lmsg = "未能设置套接字选项。";
         wlog::log(lmsg);
         cerr << lmsg << '\n';
-        return 0;
+        return;
     }
     // 设置服务器地址结构
     memset(&serverAddr, 0, sizeof(serverAddr));
@@ -163,7 +171,7 @@ int udp_progress::udp_msg_process()
         wlog::log(lmsg);
         wlog::log(strerror(errno));
         cerr << lmsg << strerror(errno) << '\n'; // 打印具体的错误信息
-        return 0;
+        return;
     }
 
     while (1)
@@ -200,5 +208,4 @@ int udp_progress::udp_msg_process()
     lmsg = "UDP 监听结束";
     wlog::log(lmsg);
     cout << lmsg << '\n';
-    return 0;
 }

@@ -62,11 +62,11 @@ int keyboard::kb_scan()
         if (ucmd == "users")
             users_cmd();
         else if (ucmd.find("sendto") != pos)
-            sendto_cmd(ucmd);
+            sendto_cmd(ucmd.substr(7));
         else if (ucmd.find("getfile") != pos)
-            getfile_cmd(ucmd);
+            getfile_cmd(ucmd.substr(8));
         else if (ucmd.find("sendfile") != pos)
-            sendfile_cmd(ucmd);
+            sendfile_cmd(ucmd.substr(9));
         else if (ucmd == "RFL" || ucmd == "rfl")
             RFL_cmd();
         else if (ucmd == "SFL" || ucmd == "sfl")
@@ -155,10 +155,12 @@ void keyboard::exit_cmd()
     cout << "程序退出……\n";
 }
 
-/** 送信 */
-void keyboard::sendto_cmd(string cmd)
+/**
+ * 送信
+ * @param dest 目标用户名
+ */
+void keyboard::sendto_cmd(string dest)
 {
-    dest = cmd.substr(7);
     lmsg = "尝试交流：";
     wlog::log(lmsg);
     wlog::log(dest);
@@ -196,7 +198,11 @@ void keyboard::sendto_cmd(string cmd)
     }
 }
 
-/** 根据用户名判断 */
+/**
+ * 根据用户名判断要交流的用户是否存在
+ * @param destU 目标用户名
+ * @return 若用户名匹配，则将目标地址设定为匹配到的用户并返回真
+ */
 bool keyboard::hasUser(string destU)
 {
     bool exist = false;
@@ -247,10 +253,12 @@ void keyboard::SFL_cmd()
     cout << '\n';
 }
 
-/** 接收文件 */
-void keyboard::getfile_cmd(string cmd)
+/**
+ * 接收文件
+ * @param fileName 要接收文件的文件名
+ */
+void keyboard::getfile_cmd(string fileName)
 {
-    string fileName = cmd.substr(8);
     string file_dir = "./files";
 
     lmsg = "准备接收文件";
@@ -376,10 +384,12 @@ void keyboard::getfile_cmd(string cmd)
     ofs.close();
 }
 
-/** 发送文件 */
-void keyboard::sendfile_cmd(string cmd)
+/**
+ * 发送文件
+ * @param dest 要发送文件的文件名
+ */
+void keyboard::sendfile_cmd(string dest)
 {
-    dest = cmd.substr(9);
     lmsg = "尝试发送文件：";
     wlog::log(lmsg);
     wlog::log(dest);
@@ -473,6 +483,7 @@ void keyboard::sendfile_cmd(string cmd)
 /** 历史记录 */
 void keyboard::history_cmd()
 {
+    string dest;
     cout << "\n现有用户列表：\n";
     list<string> allu = history::get_all();
     if (allu.empty())

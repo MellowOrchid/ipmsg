@@ -12,11 +12,8 @@ public:
     char buf[1024];     // 附加信息
     cmd();
     ~cmd();
-    /** 译码，将接收到的字符串分解为 cmd 类对象 */
-    static void transcode(cmd &obj, char buf[]);
-
-    /** 编码，将要发送的信息编码为字符串保存到 buf 中 */
-    static int coding(char *buf, unsigned int cmd, char *append);
+    static void transcode(cmd &obj, char *buf);
+    static void coding(char *buf, unsigned int cmd, char *append);
 };
 
 #endif

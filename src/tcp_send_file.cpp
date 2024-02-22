@@ -12,7 +12,7 @@
 
 using std::cout, std::cerr, std::ifstream;
 
-// 发送文件
+/** 发送文件 */
 void tcp_send_file()
 {
     int cnct_sockt; // 连接套接字
@@ -95,9 +95,9 @@ void tcp_send_file()
 
             history::write_history(cmd_obj.name, myname, lmsg, sdfile.name);
         }
-    
+
         if (cmd_obj.cmdid == OFFLINE)
-            break;        
+            break;
     }
     lmsg = "TCP 监听结束";
     wlog::log(lmsg);

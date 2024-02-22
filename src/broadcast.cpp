@@ -18,6 +18,8 @@ broadcast::broadcast()
 
     cout << "用户名：";
     cin >> myname;
+
+    gethostname(hname, sizeof(hname));
 }
 
 broadcast::~broadcast()
@@ -43,13 +45,17 @@ void broadcast::send(const string &message)
     // wlog::log(result);
 }
 
-/** 合并信息 */
+/**
+ * 合并信息
+ * @param buffer 目标字符串的指针
+ * @param cmd IPMSG 协议中的指令代号
+ * @param append 追加的信息
+ */
 void broadcast::coding(char *buffer, unsigned int cmd, char *append)
 {
     time_t h;
 
     time(&h);
-    gethostname(hname, sizeof(hname));
     if (append == NULL)
         *append = '0';
 

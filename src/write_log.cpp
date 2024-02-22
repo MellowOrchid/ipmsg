@@ -13,6 +13,10 @@ wlog::wlog() {}
 
 wlog::~wlog() {}
 
+/**
+ * 记录日志
+ * @param message 要记录的内容
+ */
 void wlog::log(string message)
 {
     // 获取当前系统时间点
@@ -31,6 +35,10 @@ void wlog::log(string message)
     fst.close();
 }
 
+/**
+ * 记录日志
+ * @param message 要记录的内容
+ */
 void wlog::log(const char *message)
 {
     // 获取当前系统时间点
@@ -52,6 +60,8 @@ void wlog::log(const char *message)
 }
 
 /**
+ * 记录日志
+ * @param message 要记录的内容
  * @deprecated 为使数据在同一行上，改用 log(std::string, int);
  */
 void wlog::log(int message)
@@ -73,6 +83,11 @@ void wlog::log(int message)
     fst.close();
 }
 
+/**
+ * 记录日志
+ * @param message 要记录的内容
+ * @param append 追加记录的内容
+ */
 void wlog::log(string message, int append)
 {
     // 获取当前系统时间点

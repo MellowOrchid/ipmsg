@@ -8,7 +8,6 @@ using std::string;
 class wlog
 {
 private:
-
 public:
     wlog();
     ~wlog();

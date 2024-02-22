@@ -17,6 +17,10 @@ history::history() {}
 
 history::~history() {}
 
+/**
+ * 读取所有历史记录名单中的用户名
+ * @return 以 `std::string` 为内容的 `std::list`
+ */
 list<string> history::get_all()
 {
     ck_dir();
@@ -48,6 +52,10 @@ list<string> history::get_all()
     return all_users;
 }
 
+/**
+ * 追加用户到历史记录名单
+ * @param name 要追加的用户名
+ */
 void history::app_user(string name)
 {
     ck_dir();
@@ -65,6 +73,10 @@ void history::app_user(string name)
     all_his.close();
 }
 
+/**
+ * 追加用户到历史记录名单
+ * @param name 要追加的用户名
+ */
 void history::app_user(char *name)
 {
     ck_dir();
@@ -82,6 +94,11 @@ void history::app_user(char *name)
     all_his.close();
 }
 
+/**
+ * 检查某用户是否在历史记录名单中
+ * @param name 目标用户名
+ * @return 若该用户存在，则返回真
+ */
 bool history::has_user(string name)
 {
     ck_dir();
@@ -93,6 +110,11 @@ bool history::has_user(string name)
     return false;
 }
 
+/**
+ * 检查某用户是否在历史记录名单中
+ * @param name 目标用户名
+ * @return 若该用户存在，则返回真
+ */
 bool history::has_user(char *name)
 {
     ck_dir();
@@ -214,6 +236,10 @@ void history::write_history(char *op_side, char *who_said, string message, strin
     one_his.close();
 }
 
+/**
+ * 从文件中读取聊天记录
+ * @param name 目标用户名
+ */
 void history::read_history(string name)
 {
     string dest_file = history_dir + name + ".txt";
@@ -233,6 +259,7 @@ void history::read_history(string name)
     one_his.close();
 }
 
+/** 检查 `history` 目录是否存在*/
 void history::ck_dir()
 {
     // 检查目录是否存在
