@@ -32,15 +32,15 @@ broadcast::~broadcast()
 void broadcast::send(const string &message)
 {
     lmsg = "信息长度：";
-    wlog::log(lmsg);
-    wlog::log(message.length());
+    wlog::log(lmsg, message.length());
+    // wlog::log(message.length());
 
     int result = sendto(udp_sock, message.c_str(), message.size(), 0,
                         (sockaddr *)&udp_serv_addr, sizeof(udp_serv_addr));
 
     lmsg = "套接字发送结果：";
-    wlog::log(lmsg);
-    wlog::log(result);
+    wlog::log(lmsg, result);
+    // wlog::log(result);
 }
 
 /** 合并信息 */
@@ -66,8 +66,8 @@ void broadcast::bc()
     optval = 1;
 
     lmsg = "端口号为：";
-    wlog::log(lmsg);
-    wlog::log(MSG_PORT);
+    wlog::log(lmsg, MSG_PORT);
+    // wlog::log(MSG_PORT);
     cout << lmsg << MSG_PORT << '\n';
 
     // 创建 UDP 套接字

@@ -131,8 +131,8 @@ int udp_progress::udp_msg_process()
     udp_sock = socket(AF_INET, SOCK_DGRAM, 0);
 
     lmsg = "UDP 套接字信息：";
-    wlog::log(lmsg);
-    wlog::log(udp_sock);
+    wlog::log(lmsg, udp_sock);
+    // wlog::log(udp_sock);
 
     if (udp_sock < 0)
     {

@@ -277,8 +277,8 @@ void keyboard::getfile_cmd(string cmd)
     // 创建套接字
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     lmsg = "套接字结果：";
-    wlog::log(lmsg);
-    wlog::log(sockfd);
+    wlog::log(lmsg, sockfd);
+    // wlog::log(sockfd);
     if (sockfd < 0)
     {
         lmsg = "未能创建套接字";
@@ -292,8 +292,8 @@ void keyboard::getfile_cmd(string cmd)
     cout << lmsg << '\n';
     cnct_rst = connect(sockfd, (sockaddr *)&serverAddr, sizeof(sockaddr_in));
     lmsg = "连接结果：";
-    wlog::log(lmsg);
-    wlog::log(sockfd);
+    wlog::log(lmsg, sockfd);
+    // wlog::log(sockfd);
     if (cnct_rst == -1)
     {
         lmsg = "无法连接到对方";
@@ -342,8 +342,8 @@ void keyboard::getfile_cmd(string cmd)
 
     sendbytes = send(sockfd, codingbuff, strlen(codingbuff), 0);
     lmsg = "发送 IPMSG_GETFILEDATA 结果：";
-    wlog::log(lmsg);
-    wlog::log(sendbytes);
+    wlog::log(lmsg, sendbytes);
+    // wlog::log(sendbytes);
     if (sendbytes == -1)
     {
         lmsg = "发送 IPMSG_GETFILEDATA 失败";
@@ -452,8 +452,8 @@ void keyboard::sendfile_cmd(string cmd)
     sendBytes = sendto(udp_sock, file_buff, strlen(file_buff), 0,
                        (sockaddr *)&udp_sock_addr, sizeof(sockaddr_in));
     lmsg = "发送结果：";
-    wlog::log(lmsg);
-    wlog::log(sendBytes);
+    wlog::log(lmsg, sendBytes);
+    // wlog::log(sendBytes);
 
     if (sendBytes == -1)
     {

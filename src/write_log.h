@@ -15,6 +15,7 @@ public:
     static void log(string message);
     static void log(const char *message);
     static void log(int message);
+    static void log(string message, int append);
 };
 
 #endif
