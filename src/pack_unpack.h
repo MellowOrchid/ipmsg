@@ -13,7 +13,7 @@ public:
     cmd();
     ~cmd();
     static void transcode(cmd &obj, char *buf);
-    static void coding(char *buf, unsigned int cmd, char *append);
+    static void coding(char *buf, unsigned cmd, char *append);
 };
 
 #endif
