@@ -30,6 +30,6 @@ $(BUILD_DIR):
 
 # 清理生成的文件
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR) ../bin ../cache/ipch
 
 .PHONY: all clean
