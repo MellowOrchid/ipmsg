@@ -4,10 +4,12 @@
 #include <iomanip>
 #include <chrono>
 #include "write_log.h"
-using std::cerr, std::string, std::fstream, std::ios;
+#include <mutex>
+using std::cerr, std::string, std::fstream, std::ios, std::mutex;
 
 const string log_file = "log.log";
 fstream fst;
+mutex mtx; // 全局互斥锁
 
 wlog::wlog() {}
 
@@ -19,6 +21,8 @@ wlog::~wlog() {}
  */
 void wlog::log(string message)
 {
+    std::lock_guard<std::mutex> lock(mtx); // 获取锁
+
     // 获取当前系统时间点
     auto currentTime = std::chrono::system_clock::now();
     // 将时间点转换为 time_t（自 UTC 1970 年 1 月 1 日起的秒数）
@@ -41,6 +45,8 @@ void wlog::log(string message)
  */
 void wlog::log(const char *message)
 {
+    std::lock_guard<std::mutex> lock(mtx); // 获取锁
+
     // 获取当前系统时间点
     auto currentTime = std::chrono::system_clock::now();
     // 将时间点转换为 time_t（自 UTC 1970 年 1 月 1 日起的秒数）
@@ -65,6 +71,8 @@ void wlog::log(const char *message)
  */
 void wlog::log(int message)
 {
+    std::lock_guard<std::mutex> lock(mtx); // 获取锁
+
     // 获取当前系统时间点
     auto currentTime = std::chrono::system_clock::now();
     // 将时间点转换为 time_t（自 UTC 1970 年 1 月 1 日起的秒数）
@@ -88,6 +96,8 @@ void wlog::log(int message)
  */
 void wlog::log(string message, int append)
 {
+    std::lock_guard<std::mutex> lock(mtx); // 获取锁
+
     // 获取当前系统时间点
     auto currentTime = std::chrono::system_clock::now();
     // 将时间点转换为 time_t（自 UTC 1970 年 1 月 1 日起的秒数）
