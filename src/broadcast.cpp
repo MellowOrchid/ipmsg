@@ -12,21 +12,9 @@
 #include "pack_unpack.h"
 using std::cin, std::cout, std::string, std::cerr;
 
-broadcast::broadcast()
-{
-    cout << "本机 IP：";
-    cin >> ip;
+broadcast::broadcast() {}
 
-    cout << "用户名：";
-    cin >> myname;
-
-    gethostname(hname, sizeof(hname));
-}
-
-broadcast::~broadcast()
-{
-    close(udp_sock);
-}
+broadcast::~broadcast() { close(udp_sock); }
 
 /**
  * 发送广播信息

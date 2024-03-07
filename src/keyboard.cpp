@@ -24,9 +24,6 @@ filelist flist_impl;
 
 keyboard::keyboard()
 {
-    cout << "广播 IP：";
-    cin >> br_ip;
-
     names.push_back("显示好友列表");
     names.push_back("给好友发送消息");
     names.push_back("显示发送文件列表");

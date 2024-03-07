@@ -8,6 +8,7 @@
 #include "tcp_send_file.h"
 #include "write_log.h"
 #include "file.h"
+#include "cfg_init.h"
 using std::cin, std::cout, std::string, std::thread;
 
 int udp_sock;
@@ -25,7 +26,8 @@ int main()
     lmsg = "===== 程序开始 =====";
     wlog::log(lmsg);
 
-    system("ifconfig");
+    // 初始化本机信息
+    cfg::init();
 
     keyboard kb;
     broadcast broadcast;
