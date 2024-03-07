@@ -45,7 +45,6 @@ void wlog::log(const char *message)
     auto currentTime = std::chrono::system_clock::now();
     // 将时间点转换为 time_t（自 UTC 1970 年 1 月 1 日起的秒数）
     std::time_t currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
-    fstream fst;
 
     fst.open(log_file, ios::app);
     if (!fst.is_open())
@@ -70,7 +69,6 @@ void wlog::log(int message)
     auto currentTime = std::chrono::system_clock::now();
     // 将时间点转换为 time_t（自 UTC 1970 年 1 月 1 日起的秒数）
     std::time_t currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
-    fstream fst;
 
     fst.open(log_file, ios::app);
     if (!fst.is_open())

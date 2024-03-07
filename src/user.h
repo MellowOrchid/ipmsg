@@ -1,5 +1,6 @@
 #ifndef _USER_H_
 #define _USER_H_
+
 #include <string>
 #include <netinet/in.h>
 #include "user.h"

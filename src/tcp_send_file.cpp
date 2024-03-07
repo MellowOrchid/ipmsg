@@ -21,10 +21,10 @@ void tcp_send_file::send_f()
 {
     int cnct_sockt; // 连接套接字
     int recvbytes;
-    socklen_t len;
     char rcv[1024];
     char recvbuf[BUFF_SIZE];
     char sendbuf[BUFFER_SIZE];
+    socklen_t len;
     ifstream ifs;
     cmd cmd_obj;
     sendfile sdfile;
@@ -53,7 +53,8 @@ void tcp_send_file::send_f()
         wlog::log(recvbuf);
 
         char version[50];
-        sscanf(recvbuf, "%[^:]:%[^:]:%[^:]:%[^:]:%d:%[^\003]", version, rcv, cmd_obj.name, cmd_obj.hostname, &cmd_obj.cmdid, cmd_obj.buf);
+        sscanf(recvbuf, "%[^:]:%[^:]:%[^:]:%[^:]:%d:%[^\003]", version, rcv,
+               cmd_obj.name, cmd_obj.hostname, &cmd_obj.cmdid, cmd_obj.buf);
 
         // 发文件
         if (GET_MODE(cmd_obj.cmdid) == IPMSG_GETFILEDATA)

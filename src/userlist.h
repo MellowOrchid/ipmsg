@@ -1,5 +1,6 @@
 #ifndef _USERLIST_H_
 #define _USERLIST_H_
+
 #include <iostream>
 #include <cstring>
 #include <list>

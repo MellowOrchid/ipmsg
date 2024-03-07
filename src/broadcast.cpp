@@ -9,6 +9,7 @@
 #include "IPMSG.H"
 #include "public.h"
 #include "history.h"
+#include "pack_unpack.h"
 using std::cin, std::cout, std::string, std::cerr;
 
 broadcast::broadcast()
@@ -50,6 +51,7 @@ void broadcast::send(const string &message)
  * @param buffer 目标字符串的指针
  * @param cmd IPMSG 协议中的指令代号
  * @param append 追加的信息
+ * @deprecated 该函数已被重写于 `pack_unpack.h`
  */
 void broadcast::coding(char *buffer, unsigned int cmd, char *append)
 {
@@ -116,7 +118,7 @@ void broadcast::bc()
     // servaddr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
     inet_pton(AF_INET, br_ip, &udp_serv_addr.sin_addr);
 
-    coding(buffer, IPMSG_BR_ENTRY, myname);
+    cmd::coding(buffer, IPMSG_BR_ENTRY, myname);
     send(buffer);
 
     inet_pton(AF_INET, ip, &udp_serv_addr.sin_addr);
