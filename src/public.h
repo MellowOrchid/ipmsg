@@ -6,6 +6,7 @@
 #include "user.h"
 #include "userlist.h"
 #include "file.h"
+#include "encode_convert.h"
 using std::list, std::string;
 
 #define BUFF_SIZE 128
@@ -17,6 +18,7 @@ extern char myname[20];
 extern char hname[20];
 extern char ip[20], br_ip[20];
 extern string lmsg;
+extern int utf_convert;
 
 extern int udp_sock;
 extern int tcp_sock;

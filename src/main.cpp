@@ -14,6 +14,7 @@ using std::cin, std::cout, std::string, std::thread;
 int udp_sock;
 int tcp_sock;
 char myname[20], hname[20], ip[20], br_ip[20];
+int utf_convert = NO_CNV;
 string lmsg;
 list<user> ulist;
 list<sendfile> send_file_list;

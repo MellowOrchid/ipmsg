@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include <arpa/inet.h>
+#include <iconv.h>
 #include <vector>
 #include <fstream>
 #include <unistd.h>
@@ -14,6 +15,7 @@
 #include "filelist.h"
 #include "write_log.h"
 #include "history.h"
+#include "encode_convert.h"
 
 using std::cin, std::cout, std::cerr, std::string, std::vector, std::list,
     std::ofstream, std::ifstream, std::ios;
@@ -158,6 +160,8 @@ void keyboard::exit_cmd()
  */
 void keyboard::sendto_cmd(string dest)
 {
+    char choice;
+    string convertedStr;
     lmsg = "尝试交流：";
     wlog::log(lmsg);
     wlog::log(dest);
@@ -168,6 +172,10 @@ void keyboard::sendto_cmd(string dest)
         cerr << lmsg << '\n';
         return;
     }
+    cout << "是否转换到 GBK 编码？(y/n)：";
+    cin >> choice;
+    getchar(); // 读一个回车
+    utf_convert = (choice == 'y' || choice == 'Y') ? to_GBK : NO_CNV;
 
     cout << "\n输入 `exit` 可退出交流\n";
     while (1)
@@ -177,9 +185,15 @@ void keyboard::sendto_cmd(string dest)
         if (!strcmp(message, "exit"))
         {
             cout << "与【" << dest << "】的交流结束\n\n";
+            utf_convert = NO_CNV;
             break;
         }
-        cmd::coding(codingbuff, IPMSG_SENDMSG, message);
+        if (utf_convert == to_GBK)
+            convertedStr = encode_convert::convertEncoding(message, "GBK", "UTF-8");
+        else
+            convertedStr = message;
+            
+        cmd::coding(codingbuff, IPMSG_SENDMSG, convertedStr.c_str());
         result = sendto(udp_sock, codingbuff, strlen(codingbuff), 0,
                         (sockaddr *)&dest_addr, sizeof(dest_addr));
         if (result == -1)
@@ -189,6 +203,7 @@ void keyboard::sendto_cmd(string dest)
             wlog::log(strerror(errno));
             cerr << lmsg << strerror(errno) << '\n'
                  << "与【" << dest << "】的交流结束\n\n";
+            utf_convert = NO_CNV;
             break;
         }
         history::write_history(dest, myname, message);
