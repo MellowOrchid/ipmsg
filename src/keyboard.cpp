@@ -75,8 +75,10 @@ int keyboard::kb_scan()
             exit_cmd();
             break;
         }
-        else
+        else if (ucmd == "help")
             help_cmd();
+        else
+            cout << "无效命令，输入 `help` 查看使用方法\n";
     }
 
     return 0;
