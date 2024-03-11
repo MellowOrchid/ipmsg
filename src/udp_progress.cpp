@@ -24,7 +24,6 @@ udp_progress::~udp_progress() {}
  */
 void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
 {
-    unsigned long tmp = 0;
     // 接受到用户广播上线信息
     if (GET_MODE(msg->cmdid) == IPMSG_BR_ENTRY)
     {
@@ -73,7 +72,7 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
         {
             cmd::coding(codingbuff, IPMSG_RECVMSG, msg->id);
             sendto(udp_sock, codingbuff, strlen(codingbuff), 0,
-                   (struct sockaddr *)&udp_sock_addr, sizeof(udp_sock_addr));
+                   (sockaddr *)&udp_sock_addr, sizeof(sockaddr_in));
         }
 
         // 防止空信息
@@ -90,6 +89,7 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
     // 接收到文件
     if ((msg->cmdid & IPMSG_FILEATTACHOPT) == IPMSG_FILEATTACHOPT)
     {
+        unsigned long tmp = 0;
         char codingbuff[BUFF_SIZE];
         char *csend, *pp;
         cmd::coding(codingbuff, IPMSG_RECVMSG, msg->id);
@@ -116,7 +116,7 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
             cerr << lmsg << '\n';
             return;
         }
-        
+
         for (long unsigned i = 0; i < strlen(pp); i++)
         {
             tmp = tmp * 10 + (*csend - 0x30);

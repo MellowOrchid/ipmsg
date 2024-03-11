@@ -32,6 +32,7 @@ keyboard::keyboard()
     names.push_back("发送文件");
     names.push_back("接收文件");
     names.push_back("查看聊天记录");
+    names.push_back("开始 IPv6 通信");
     names.push_back("退出程序");
     cmds.push_back("\t\tusers");
     cmds.push_back("\tsendto [好友名]");
@@ -40,6 +41,7 @@ keyboard::keyboard()
     cmds.push_back("\t\tsendfile [好友名]");
     cmds.push_back("\t\tgetfile [文件名]");
     cmds.push_back("\t\thistory");
+    cmds.push_back("\tipv6");
     cmds.push_back("\t\texit");
 }
 
@@ -71,6 +73,8 @@ int keyboard::kb_scan()
             SFL_cmd();
         else if (ucmd == "history")
             history_cmd();
+        else if (ucmd == "ipv6")
+            contact_ipv6_cmd();
         else if (ucmd == "exit")
         {
             exit_cmd();
@@ -509,8 +513,9 @@ void keyboard::history_cmd()
 
 void keyboard::contact_ipv6_cmd()
 {
+    contact_ipv6 c6;
     lmsg = "开始进行 IPv6 通信";
     wlog::log(lmsg);
     cout << lmsg << '\n';
-    contact_ipv6::contact();
+    c6.contact();
 }
