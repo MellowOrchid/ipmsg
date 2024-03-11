@@ -65,10 +65,10 @@ void contact_ipv6::contact()
     init();
     thread udp_thread(&contact_ipv6::udp_process, this);
     thread tcp_thread(&contact_ipv6::send_file, this);
+    send_message();
 
     udp_thread.join();
     tcp_thread.join();
-    send_message();
 }
 
 void contact_ipv6::send_message()
