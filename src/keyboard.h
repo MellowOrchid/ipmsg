@@ -29,6 +29,7 @@ public:
     void getfile_cmd(string cmd);
     void sendfile_cmd(string cmd);
     void history_cmd();
+    void contact_ipv6_cmd();
 };
 
 #endif

@@ -14,6 +14,7 @@
 #include "filelist.h"
 #include "write_log.h"
 #include "history.h"
+#include "contact_ipv6.h"
 
 using std::cin, std::cout, std::cerr, std::string, std::vector, std::list,
     std::ofstream, std::ifstream, std::ios;
@@ -502,4 +503,12 @@ void keyboard::history_cmd()
 
     history::read_history(dest);
     cout << '\n';
+}
+
+void keyboard::contact_ipv6_cmd()
+{
+    lmsg = "开始进行 IPv6 通信";
+    wlog::log(lmsg);
+    cout << lmsg << '\n';
+    contact_ipv6::contact();
 }
