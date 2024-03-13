@@ -88,7 +88,7 @@ int keyboard::kb_scan()
 void keyboard::help_cmd()
 {
     cout << "\n使用指南：\n";
-    for (long unsigned i = 0; i < names.size(); i++)
+    for (unsigned long i = 0; i < names.size(); i++)
         cout << names.at(i) << "：" << cmds.at(i) << '\n';
     cout << '\n';
 }

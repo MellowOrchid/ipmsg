@@ -51,7 +51,7 @@ void cfg::read_cfg()
     cout << "是否使用该配置？接受请输 y，拒绝请输 n\n";
     char c;
     cin >> c;
-    if (c == 'n')
+    if (c == 'n' || c == 'N')
     {
         lmsg = "用户拒绝已有配置文件";
         wlog::log(lmsg);
