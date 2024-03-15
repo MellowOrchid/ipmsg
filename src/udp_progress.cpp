@@ -135,80 +135,36 @@ void udp_progress::udp_msg_process()
 {
     unsigned addrLen = sizeof(udp_sock_addr);
     int recvbytes;
-    sockaddr_in serverAddr;
 
-    /*
-        memset(&udp_sock_addr, 0, sizeof(udp_sock_addr));
-
-        close(udp_sock);
-        udp_sock = socket(AF_INET, SOCK_DGRAM, 0);
-
-        lmsg = "UDP 套接字信息：";
-        wlog::log(lmsg, udp_sock);
-        // wlog::log(udp_sock);
-
-        if (udp_sock < 0)
-        {
-            lmsg = "未能创建套接字。";
-            wlog::log(lmsg);
-            cerr << lmsg << '\n';
-            return;
-        }
-        // 设置套接字选项以允许广播
-        int broadcastEnable = 1;
-        if (setsockopt(udp_sock, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable)) < 0)
-        {
-            lmsg = "未能设置套接字选项。";
-            wlog::log(lmsg);
-            cerr << lmsg << '\n';
-            return;
-        }
-        // 设置服务器地址结构
-        memset(&serverAddr, 0, sizeof(serverAddr));
-        serverAddr.sin_family = AF_INET;
-        serverAddr.sin_port = htons(MSG_PORT);
-        serverAddr.sin_addr.s_addr = INADDR_ANY;
-
-        // 绑定套接字到端口
-        if (bind(udp_sock, (sockaddr *)&serverAddr, sizeof(sockaddr_in)) < 0)
-        {
-            lmsg = "未能绑定套接字：";
-            wlog::log(lmsg);
-            wlog::log(strerror(errno));
-            cerr << lmsg << strerror(errno) << '\n'; // 打印具体的错误信息
-            return;
-        }
-    */
-    while (1)
+    while (true)
     {
         cmd cmd_obj;
         // 接收用户信息，接收广播信息和广播机器的 IP，不限源
-        if ((recvbytes = recvfrom(udp_sock, recvbuf, sizeof(recvbuf), 0,
-                                  (sockaddr *)&udp_sock_addr, &addrLen)) != -1)
-        {
-            recvbuf[recvbytes] = 3;
-            recvbuf[recvbytes + 1] = 0;
-            lmsg = "接收到 UDP 数据包：";
-            wlog::log(lmsg);
-            wlog::log(recvbuf);
-
-            cmd::transcode(cmd_obj, recvbuf);
-            lmsg = "解析完成，开始执行";
-            wlog::log(lmsg);
-            udp_msg_handle(&cmd_obj, &udp_sock_addr);
-            lmsg = "执行完成";
-            wlog::log(lmsg);
-
-            // 接收到下线信息
-            if (cmd_obj.cmdid == IPMSG_BR_EXIT && !strcmp(cmd_obj.name, myname))
-                break;
-        }
-        else
+        recvbytes = recvfrom(udp_sock, recvbuf, sizeof(recvbuf), 0,
+                             (sockaddr *)&udp_sock_addr, &addrLen);
+        if (recvbytes < 0)
         {
             lmsg = "UDP 接收失败";
             wlog::log(lmsg);
             cerr << lmsg << '\n';
+            return;
         }
+        recvbuf[recvbytes] = 3;
+        recvbuf[recvbytes + 1] = 0;
+        lmsg = "接收到 UDP 数据包：";
+        wlog::log(lmsg);
+        wlog::log(recvbuf);
+
+        cmd::transcode(cmd_obj, recvbuf);
+        lmsg = "解析完成，开始执行";
+        wlog::log(lmsg);
+        udp_msg_handle(&cmd_obj, &udp_sock_addr);
+        lmsg = "执行完成";
+        wlog::log(lmsg);
+
+        // 接收到下线信息
+        if (cmd_obj.cmdid == IPMSG_BR_EXIT && !strcmp(cmd_obj.name, myname))
+            break;
     }
     lmsg = "UDP 监听结束";
     wlog::log(lmsg);

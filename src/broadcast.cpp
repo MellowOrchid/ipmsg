@@ -31,6 +31,13 @@ void broadcast::send(const string &message)
 
     lmsg = "套接字发送结果：";
     wlog::log(lmsg, result);
+    if (result < 0)
+    {
+        lmsg = "套接字发送失败";
+        wlog::log(lmsg);
+        exit(3);
+    }
+
     // wlog::log(result);
 }
 
@@ -44,10 +51,7 @@ void broadcast::send(const string &message)
 void broadcast::coding(char *buffer, unsigned int cmd, char *append)
 {
     time_t h;
-
     time(&h);
-    if (append == NULL)
-        *append = '0';
 
     sprintf(buffer, "1:%ld:%s:%s:%d:%s", h, myname, hname, cmd, append);
 
@@ -86,11 +90,12 @@ void broadcast::bc()
         exit(1);
     }
 
-    memset(&tcp_serv_addr, 0, sizeof(tcp_serv_addr));
-    tcp_serv_addr.sin_family = AF_INET;
-    tcp_serv_addr.sin_port = htons(MSG_PORT);
-    tcp_serv_addr.sin_addr.s_addr = INADDR_ANY;
-    if (bind(tcp_sock, (sockaddr *)&tcp_serv_addr, sizeof(sockaddr_in)) < 0)
+    memset(&tcp_sock_addr, 0, sizeof(tcp_sock_addr));
+    tcp_sock_addr.sin_family = AF_INET;
+    tcp_sock_addr.sin_port = htons(MSG_PORT);
+    tcp_sock_addr.sin_addr.s_addr = INADDR_ANY;
+
+    if (bind(tcp_sock, (sockaddr *)&tcp_sock_addr, sizeof(sockaddr_in)) < 0)
     {
         lmsg = "未能绑定 TCP 套接字";
         wlog::log(lmsg);
@@ -107,12 +112,21 @@ void broadcast::bc()
     // 绑定套接字到端口
     if (bind(udp_sock, (sockaddr *)&udp_sock_addr, sizeof(sockaddr_in)) < 0)
     {
-        lmsg = "未能绑定套接字：";
+        lmsg = "未能绑定 UDP 套接字：";
         wlog::log(lmsg);
         wlog::log(strerror(errno));
         cerr << lmsg << strerror(errno) << '\n'; // 打印具体的错误信息
-        return;
+        exit(2);
     }
+
+    if (listen(tcp_sock, 10))
+    {
+        lmsg = "TCP 监听错误";
+        wlog::log(lmsg);
+        cerr << lmsg << '\n';
+        exit(2);
+    }
+
     inet_pton(AF_INET, br_ip, &udp_sock_addr.sin_addr);
 
     cmd::coding(buffer, IPMSG_BR_ENTRY, myname);

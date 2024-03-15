@@ -11,8 +11,6 @@ private:
     int optval;
     char buffer[1024];
     userlist ulist_impl;
-    sockaddr_in udp_serv_addr;
-    sockaddr_in tcp_serv_addr;
 
 public:
     broadcast();
