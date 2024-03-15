@@ -40,13 +40,13 @@ void cfg::init()
  */
 void cfg::read_cfg()
 {
-    cfg_stream >> myname >> hname >> ip >> br_ip;
+    cfg_stream >> myname >> hname >> myip >> br_ip;
     cfg_stream.close();
 
     cout << "已有配置文件，信息如下：\n";
     cout << "用户名：" << myname << '\n'
          << "主机名：" << hname << '\n'
-         << "本机 IP：" << ip << '\n'
+         << "本机 IP：" << myip << '\n'
          << "广播 IP：" << br_ip << '\n';
     cout << "是否使用该配置？接受请输 y，拒绝请输 n\n";
     char c;
@@ -81,14 +81,14 @@ void cfg::create_cfg()
     {
         gethostname(hname, sizeof(hname));
         cout << "本机 IP：";
-        cin >> ip;
+        cin >> myip;
         cout << "广播 IP：";
         cin >> br_ip;
         cout << "用户名：";
         cin >> myname;
         cfg_stream << myname << '\n'
                    << hname << '\n'
-                   << ip << '\n'
+                   << myip << '\n'
                    << br_ip << '\n';
     }
     cfg_stream.close();

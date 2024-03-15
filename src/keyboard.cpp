@@ -138,7 +138,7 @@ void keyboard::exit_cmd()
     }
     client_addr.sin_family = AF_INET;
     client_addr.sin_port = htons(MSG_PORT);
-    client_addr.sin_addr.s_addr = inet_addr(ip);
+    client_addr.sin_addr.s_addr = inet_addr(myip);
 
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (connect(sockfd, (sockaddr *)&client_addr, sizeof(sockaddr_in)) < 0)

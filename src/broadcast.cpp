@@ -14,7 +14,7 @@ using std::cin, std::cout, std::string, std::cerr;
 
 broadcast::broadcast() {}
 
-broadcast::~broadcast() { close(udp_sock); }
+broadcast::~broadcast() {}
 
 /**
  * 发送广播信息
@@ -27,7 +27,7 @@ void broadcast::send(const string &message)
     // wlog::log(message.length());
 
     int result = sendto(udp_sock, message.c_str(), message.size(), 0,
-                        (sockaddr *)&udp_serv_addr, sizeof(udp_serv_addr));
+                        (sockaddr *)&udp_sock_addr, sizeof(udp_sock_addr));
 
     lmsg = "套接字发送结果：";
     wlog::log(lmsg, result);
@@ -100,18 +100,27 @@ void broadcast::bc()
 
     setsockopt(udp_sock, SOL_SOCKET, SO_BROADCAST, &optval, sizeof(optval));
 
-    memset(&udp_serv_addr, 0, sizeof(udp_serv_addr));
-    udp_serv_addr.sin_family = AF_INET;
-    udp_serv_addr.sin_port = htons(MSG_PORT);
-    // servaddr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
-    inet_pton(AF_INET, br_ip, &udp_serv_addr.sin_addr);
+    memset(&udp_sock_addr, 0, sizeof(udp_sock_addr));
+    udp_sock_addr.sin_family = AF_INET;
+    udp_sock_addr.sin_port = htons(MSG_PORT);
+    udp_sock_addr.sin_addr.s_addr = INADDR_ANY;
+    // 绑定套接字到端口
+    if (bind(udp_sock, (sockaddr *)&udp_sock_addr, sizeof(sockaddr_in)) < 0)
+    {
+        lmsg = "未能绑定套接字：";
+        wlog::log(lmsg);
+        wlog::log(strerror(errno));
+        cerr << lmsg << strerror(errno) << '\n'; // 打印具体的错误信息
+        return;
+    }
+    inet_pton(AF_INET, br_ip, &udp_sock_addr.sin_addr);
 
     cmd::coding(buffer, IPMSG_BR_ENTRY, myname);
     send(buffer);
 
-    inet_pton(AF_INET, ip, &udp_serv_addr.sin_addr);
-    user u(udp_serv_addr.sin_addr, myname, hname);
-    if (!ulist_impl.hasUser(udp_serv_addr.sin_addr))
+    inet_pton(AF_INET, myip, &udp_sock_addr.sin_addr);
+    user u(udp_sock_addr.sin_addr, myname, hname);
+    if (!ulist_impl.hasUser(udp_sock_addr.sin_addr))
         ulist.push_front(u);
     if (!history::has_user(myname))
         history::app_user(myname);

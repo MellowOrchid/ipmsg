@@ -15,7 +15,7 @@ using std::list, std::string;
 
 extern char myname[20];
 extern char hname[20];
-extern char ip[20], br_ip[20];
+extern char myip[20], br_ip[20];
 extern string lmsg;
 
 extern int udp_sock;

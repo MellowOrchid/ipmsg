@@ -116,7 +116,7 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
             cerr << lmsg << '\n';
             return;
         }
-        
+
         for (long unsigned i = 0; i < strlen(pp); i++)
         {
             tmp = tmp * 10 + (*csend - 0x30);
@@ -137,47 +137,48 @@ void udp_progress::udp_msg_process()
     int recvbytes;
     sockaddr_in serverAddr;
 
-    memset(&udp_sock_addr, 0, sizeof(udp_sock_addr));
+    /*
+        memset(&udp_sock_addr, 0, sizeof(udp_sock_addr));
 
-    close(udp_sock);
-    udp_sock = socket(AF_INET, SOCK_DGRAM, 0);
+        close(udp_sock);
+        udp_sock = socket(AF_INET, SOCK_DGRAM, 0);
 
-    lmsg = "UDP 套接字信息：";
-    wlog::log(lmsg, udp_sock);
-    // wlog::log(udp_sock);
+        lmsg = "UDP 套接字信息：";
+        wlog::log(lmsg, udp_sock);
+        // wlog::log(udp_sock);
 
-    if (udp_sock < 0)
-    {
-        lmsg = "未能创建套接字。";
-        wlog::log(lmsg);
-        cerr << lmsg << '\n';
-        return;
-    }
-    // 设置套接字选项以允许广播
-    int broadcastEnable = 1;
-    if (setsockopt(udp_sock, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable)) < 0)
-    {
-        lmsg = "未能设置套接字选项。";
-        wlog::log(lmsg);
-        cerr << lmsg << '\n';
-        return;
-    }
-    // 设置服务器地址结构
-    memset(&serverAddr, 0, sizeof(serverAddr));
-    serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons(MSG_PORT);
-    serverAddr.sin_addr.s_addr = INADDR_ANY;
+        if (udp_sock < 0)
+        {
+            lmsg = "未能创建套接字。";
+            wlog::log(lmsg);
+            cerr << lmsg << '\n';
+            return;
+        }
+        // 设置套接字选项以允许广播
+        int broadcastEnable = 1;
+        if (setsockopt(udp_sock, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable)) < 0)
+        {
+            lmsg = "未能设置套接字选项。";
+            wlog::log(lmsg);
+            cerr << lmsg << '\n';
+            return;
+        }
+        // 设置服务器地址结构
+        memset(&serverAddr, 0, sizeof(serverAddr));
+        serverAddr.sin_family = AF_INET;
+        serverAddr.sin_port = htons(MSG_PORT);
+        serverAddr.sin_addr.s_addr = INADDR_ANY;
 
-    // 绑定套接字到端口
-    if (bind(udp_sock, (sockaddr *)&serverAddr, sizeof(sockaddr_in)) < 0)
-    {
-        lmsg = "未能绑定套接字：";
-        wlog::log(lmsg);
-        wlog::log(strerror(errno));
-        cerr << lmsg << strerror(errno) << '\n'; // 打印具体的错误信息
-        return;
-    }
-
+        // 绑定套接字到端口
+        if (bind(udp_sock, (sockaddr *)&serverAddr, sizeof(sockaddr_in)) < 0)
+        {
+            lmsg = "未能绑定套接字：";
+            wlog::log(lmsg);
+            wlog::log(strerror(errno));
+            cerr << lmsg << strerror(errno) << '\n'; // 打印具体的错误信息
+            return;
+        }
+    */
     while (1)
     {
         cmd cmd_obj;

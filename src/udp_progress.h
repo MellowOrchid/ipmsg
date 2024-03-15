@@ -15,7 +15,7 @@ class udp_progress
 private:
     char recvbuf[BUFF_SIZE];
     userlist ulist_impl;
-    sockaddr_in udp_sock_addr;
+    // sockaddr_in udp_sock_addr;
 
 public:
     udp_progress();
