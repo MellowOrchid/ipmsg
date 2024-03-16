@@ -119,6 +119,14 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
              << msg->name << "】向您发送文件：" << rcvd_file.name << "\n\n"
              << "请继续写：" << std::flush; // 刷新缓冲区，使其立即打印
         pp = strtok(csend, ":");
+
+        if (pp == NULL)
+        {
+            lmsg = "文件信息解析失败";
+            wlog::log(lmsg);
+            cerr << lmsg << '\n';
+            return;
+        }
         for (long unsigned i = 0; i < strlen(pp); i++)
         {
             tmp = tmp * 10 + (*csend - 0x30);
