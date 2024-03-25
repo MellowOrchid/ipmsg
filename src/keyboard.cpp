@@ -48,7 +48,6 @@ keyboard::~keyboard() {}
 int keyboard::kb_scan()
 {
     string ucmd;
-    long unsigned pos = -1;
     getchar(); // 读一个回车
     while (1)
     {
@@ -58,11 +57,11 @@ int keyboard::kb_scan()
 
         if (ucmd == "users")
             users_cmd();
-        else if (ucmd.find("sendto") != pos)
+        else if (ucmd.find("sendto") != -1 && ucmd.length() > 7)
             sendto_cmd(ucmd.substr(7));
-        else if (ucmd.find("getfile") != pos)
+        else if (ucmd.find("getfile") != -1 && ucmd.length() > 8)
             getfile_cmd(ucmd.substr(8));
-        else if (ucmd.find("sendfile") != pos)
+        else if (ucmd.find("sendfile") != -1 && ucmd.length() > 9)
             sendfile_cmd(ucmd.substr(9));
         else if (ucmd == "RFL" || ucmd == "rfl")
             RFL_cmd();
