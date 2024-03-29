@@ -35,11 +35,11 @@ keyboard::keyboard()
     names.push_back("查看聊天记录");
     names.push_back("退出程序");
     cmds.push_back("\t\tusers");
-    cmds.push_back("\tsendto [好友名]");
+    cmds.push_back("\tsendto 目标用户名");
     cmds.push_back("\tSFL");
     cmds.push_back("\tRFL");
-    cmds.push_back("\t\tsendfile [好友名]");
-    cmds.push_back("\t\tgetfile [文件名]");
+    cmds.push_back("\t\tsendfile 目标用户名");
+    cmds.push_back("\t\tgetfile 文件名");
     cmds.push_back("\t\thistory");
     cmds.push_back("\t\texit");
 }
