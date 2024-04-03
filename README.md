@@ -9,7 +9,8 @@ C++ 版飞鸽传书，在 `Ubuntu 22.04.3 LTS` 开发，基于 TCP 传输文件�
 5. 查阅聊天记录
 
 ## 运行条件
-- Linux 环境，应安装软件包 `net-tools`
+- Linux 环境，应安装软件包 `gcc`、`g++`，建议安装软件包 `net-tools`
+- `makefile` 需要软件包 `make`，`VS Code` 需要软件包 `gdb`
 - C/C++ 标准：`C++17` 及以上
 - 对当前目录有写权限
 - 对要发送的文件有读权限
@@ -19,4 +20,13 @@ C++ 版飞鸽传书，在 `Ubuntu 22.04.3 LTS` 开发，基于 TCP 传输文件�
 编译命令示例：请根据实际调整
 ```bash
 g++ -g /PATH/TO/SRC/*.cpp -o /PATH/TO/ipmsg/bin/ipmsg
+```
+
+使用 `make` 方法：
+```bash
+make
+```
+文件清理：
+```bash
+make clean
 ```
