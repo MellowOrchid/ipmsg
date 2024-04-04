@@ -12,6 +12,7 @@
 #include "keyboard.h"
 #include "file.h"
 #include "history.h"
+#include "encode_convert.h"
 using std::cerr, std::cout;
 
 udp_progress::udp_progress() {}
@@ -79,6 +80,15 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
         // 防止空信息
         if (msg->buf[0] != 0)
         {
+            if (utf_convert == to_GBK)
+            {
+                // 先前要转换到 GBK，此处从 GBK 转换回 UTF-8
+                string str = msg->buf;
+                string convertedStr = encode_convert::convertEncoding(str, "UTF-8", "GBK");
+                strncpy(msg->buf, convertedStr.c_str(), sizeof(msg->buf) - 1);
+                msg->buf[sizeof(msg->buf) - 1] = '\0';
+            }
+
             cout << "\n接收到【" << msg->name << "】位于["
                  << inet_ntoa(send_addr->sin_addr) << "]的消息：\n"
                  << msg->buf << "\n\n"
@@ -109,6 +119,7 @@ void udp_progress::udp_msg_handle(cmd *msg, sockaddr_in *send_addr)
              << msg->name << "】向您发送文件：" << rcvd_file.name << "\n\n"
              << "请继续写：" << std::flush; // 刷新缓冲区，使其立即打印
         pp = strtok(csend, ":");
+
         if (pp == NULL)
         {
             lmsg = "文件信息解析失败";

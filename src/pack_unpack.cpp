@@ -26,7 +26,7 @@ void cmd::transcode(cmd &object, char *buffer)
  * @param cmd IPMSG 协议中的指令代号
  * @param append 附加信息
  */
-void cmd::coding(char *buffer, unsigned cmd, char *append)
+void cmd::coding(char *buffer, unsigned cmd, const char *append)
 {
     time_t h;
     time(&h);
