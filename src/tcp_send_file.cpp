@@ -29,15 +29,7 @@ void tcp_send_file::send_f()
     cmd cmd_obj;
     sendfile sdfile;
 
-    if (listen(tcp_sock, 10))
-    {
-        lmsg = "TCP 监听错误";
-        wlog::log(lmsg);
-        cerr << lmsg << '\n';
-        exit(2);
-    }
-
-    while (1)
+    while (true)
     {
         cnct_sockt = accept(tcp_sock, (sockaddr *)&tcp_sock_addr, &len);
         lmsg = "TCP 连接成功";

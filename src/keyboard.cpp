@@ -89,7 +89,7 @@ int keyboard::kb_scan()
 void keyboard::help_cmd()
 {
     cout << "\n使用指南：\n";
-    for (long unsigned i = 0; i < names.size(); i++)
+    for (unsigned long i = 0; i < names.size(); i++)
         cout << names.at(i) << "：" << cmds.at(i) << '\n';
     cout << '\n';
 }
@@ -139,7 +139,7 @@ void keyboard::exit_cmd()
     }
     client_addr.sin_family = AF_INET;
     client_addr.sin_port = htons(MSG_PORT);
-    client_addr.sin_addr.s_addr = inet_addr(ip);
+    client_addr.sin_addr.s_addr = inet_addr(myip);
 
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (connect(sockfd, (sockaddr *)&client_addr, sizeof(sockaddr_in)) < 0)
